@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.belac.ines.foodie.app.AppConfig;
+import com.belac.ines.foodie.helper.SQLiteHandler;
 import com.belac.ines.foodie.helper.SessionManager;
 
 import org.json.JSONException;
@@ -36,6 +37,7 @@ public class Login extends AppCompatActivity {
     private EditText etPassword;
     private Button btLogin;
     private SessionManager session;
+    private SQLiteHandler db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,7 @@ public class Login extends AppCompatActivity {
         etPassword = (EditText) findViewById(R.id.lozinka);
         btLogin = (Button) findViewById(R.id.btnLogin);
 
+        db = new SQLiteHandler(getApplicationContext());
         session = new SessionManager(getApplicationContext());
 
         // Check if user is already logged in or not
@@ -164,9 +167,12 @@ public class Login extends AppCompatActivity {
                 if (!error) {
                     String name = jObj.getString("name");
                     String surname = jObj.getString("surname");
+                    String email = jObj.getString("email");
                     Toast.makeText(getApplicationContext(), name + " " + surname, Toast.LENGTH_LONG).show();
-                    //TO DO: spremit usera u SQLite
                     session.setLogin(true);
+                    // Inserting row in users table
+                    db.addUser(name, surname, email);
+
                     Intent intent = new Intent(Login.this, Main.class);
                     startActivity(intent);
                     Login.this.finish();
@@ -181,7 +187,7 @@ public class Login extends AppCompatActivity {
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
-                Toast.makeText(getApplicationContext(), "Wrong user or password.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "JSON problem: " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
 
             pdLoading.dismiss();
