@@ -16,11 +16,10 @@ public class Main extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toast.makeText(getApplicationContext(), "Dobrodošli", Toast.LENGTH_LONG).show();
-
         SessionManager session;
         session = new SessionManager(getApplicationContext());
-        Toast.makeText(getApplicationContext(), "User Login Status: " + session.isLoggedIn(), Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "Dobrodošli", Toast.LENGTH_LONG).show();
+        Toast.makeText(Main.this, "Session: " + session.isLoggedIn(), Toast.LENGTH_LONG).show();
 
     }
 }

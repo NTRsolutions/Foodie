@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.belac.ines.foodie.app.AppConfig;
+import com.belac.ines.foodie.helper.SessionManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,34 +30,40 @@ import java.net.URL;
 
 public class Login extends AppCompatActivity {
 
-    // CONNECTION_TIMEOUT and READ_TIMEOUT are in milliseconds
-
     public static final int CONNECTION_TIMEOUT=10000;
     public static final int READ_TIMEOUT=15000;
     private EditText etEmail;
     private EditText etPassword;
     private Button btLogin;
+    private SessionManager session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // Get Reference to variables
         etEmail = (EditText) findViewById(R.id.email);
         etPassword = (EditText) findViewById(R.id.lozinka);
         btLogin = (Button) findViewById(R.id.btnLogin);
 
+        session = new SessionManager(getApplicationContext());
+
+        // Check if user is already logged in or not
+        if (session.isLoggedIn()) {
+            // User is already logged in. Take him to main activity
+            Intent intent = new Intent(Login.this, Main.class);
+            startActivity(intent);
+            finish();
+        }
     }
 
     // Triggers when LOGIN Button clicked
     public void checkLogin(View arg0) {
 
-        // Get text from email and passord field
         final String email = etEmail.getText().toString().trim();
         final String password = etPassword.getText().toString().trim();
+
         if(!email.isEmpty() && !password.isEmpty() ) {
-            // Initialize  AsyncLogin() class with email and password
             new AsyncLogin().execute(email,password);
         }else{
             Toast.makeText(Login.this, "OOPs! Please enter your email and password.", Toast.LENGTH_LONG).show();
@@ -76,14 +83,11 @@ public class Login extends AppCompatActivity {
             pdLoading.setMessage("\tLoading...");
             pdLoading.setCancelable(false);
             pdLoading.show();
-
         }
 
         @Override
         protected String doInBackground(String... params) {
             try {
-
-                // Enter URL address where your php file resides
                 url = new URL(AppConfig.URL_LOGIN);
 
             } catch (MalformedURLException e) {
@@ -91,8 +95,7 @@ public class Login extends AppCompatActivity {
                 return "exception";
             }
             try {
-
-                    // Setup HttpURLConnection class to send and receive data from php and mysql
+                    // Setup HttpURLConnection class
                     conn = (HttpURLConnection) url.openConnection();
                     conn.setReadTimeout(READ_TIMEOUT);
                     conn.setConnectTimeout(CONNECTION_TIMEOUT);
@@ -118,7 +121,6 @@ public class Login extends AppCompatActivity {
                     os.close();
                     conn.connect();
 
-
             } catch (IOException e1) {
                 e1.printStackTrace();
                 return "exception";
@@ -140,14 +142,10 @@ public class Login extends AppCompatActivity {
                     while ((line = reader.readLine()) != null) {
                         result.append(line);
                     }
-
                     // Pass data to onPostExecute method
                     return (result.toString());
 
-                } else {
-
-                    return ("unsuccessful");
-                }
+                } else { return ("unsuccessful"); }
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -155,8 +153,6 @@ public class Login extends AppCompatActivity {
             } finally {
                 conn.disconnect();
             }
-
-
         }
 
         @Override
@@ -169,7 +165,8 @@ public class Login extends AppCompatActivity {
                     String name = jObj.getString("name");
                     String surname = jObj.getString("surname");
                     Toast.makeText(getApplicationContext(), name + " " + surname, Toast.LENGTH_LONG).show();
-
+                    //TO DO: spremit usera u SQLite
+                    session.setLogin(true);
                     Intent intent = new Intent(Login.this, Main.class);
                     startActivity(intent);
                     Login.this.finish();
