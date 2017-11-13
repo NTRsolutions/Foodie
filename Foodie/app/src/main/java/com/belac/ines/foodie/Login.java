@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.belac.ines.foodie.app.AppConfig;
 import com.belac.ines.foodie.helper.SQLiteHandler;
 import com.belac.ines.foodie.helper.SessionManager;
+import com.belac.ines.foodie.registration.Register;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -194,4 +195,11 @@ public class Login extends AppCompatActivity {
 
         }
     }
+
+    public void createAccount(View arg0){
+        Intent intent = new Intent(Login.this, Register.class);
+        startActivity(intent);
+        //Login.this.finish();
+    }
+
 }
