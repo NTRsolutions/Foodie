@@ -89,28 +89,6 @@
         android:textSize="14sp"
         android:inputType="textPersonName" />
 
-    <!-- Confirmation of password -->
-    <TextView
-        android:id="@+id/txtPassword2"
-        android:text="Password"
-        android:layout_width="70dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_below="@+id/etPassword"/>
-
-    <EditText
-        android:id="@+id/etPassword2"
-        android:background="@drawable/textbox"
-        android:layout_height="30dp"
-        android:layout_width="match_parent"
-        android:maxLines="1"
-        android:textSize="14sp"
-        android:inputType="textPersonName"
-        android:layout_alignBaseline="@+id/txtPassword2"
-        android:layout_alignBottom="@+id/txtPassword2"
-        android:layout_alignParentEnd="true"
-        android:layout_toEndOf="@+id/txtPassword2" />
-
     <!-- Register Button -->
     <Button android:id="@+id/btnRegister"
         android:layout_width="wrap_content"

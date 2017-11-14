@@ -1,20 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="10dp">
 
-
+    <!-- Name -->
     <TextView
-        android:text="Restoran"
-        android:textStyle="bold"
+        android:id="@+id/txtName"
+        android:text="Name"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp" />
+
+    <EditText
+        android:id="@+id/etName"
+        android:background="@drawable/textbox"
+        android:layout_height="30dp"
+        android:layout_width="match_parent"
+        android:maxLines="1"
+        android:layout_toEndOf="@+id/txtName"
+        android:inputType="textPersonName"
+        android:layout_alignBaseline="@+id/txtName"
+        android:textSize="14sp"/>
+
+    <!-- Surname -->
+    <TextView
+        android:id="@+id/txtSurname"
+        android:text="Surname"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/etName"/>
+
+    <EditText
+        android:id="@+id/etSurname"
+        android:background="@drawable/textbox"
+        android:layout_height="30dp"
+        android:layout_width="match_parent"
+        android:maxLines="1"
+        android:layout_toEndOf="@+id/txtSurname"
+        android:layout_below="@+id/etName"
+        android:layout_alignBaseline="@+id/txtSurname"
+        android:textSize="14sp"
+        android:inputType="textPersonName" />
+
+    <!-- Email -->
+    <TextView
+        android:id="@+id/txtEmail"
+        android:text="Email"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/etSurname"/>
+
+    <EditText
+        android:id="@+id/etEmail"
+        android:background="@drawable/textbox"
+        android:layout_height="30dp"
+        android:layout_width="match_parent"
+        android:maxLines="1"
+        android:layout_toEndOf="@+id/txtSurname"
+        android:layout_below="@+id/etSurname"
+        android:layout_alignBaseline="@+id/txtEmail"
+        android:textSize="14sp"
+        android:inputType="textPersonName" />
+
+    <!-- Contact -->
+    <TextView
+        android:id="@+id/txtTelephone"
+        android:text="Telephone"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/etEmail"/>
+
+    <EditText
+        android:id="@+id/etTelephone"
+        android:background="@drawable/textbox"
+        android:layout_height="30dp"
+        android:layout_width="match_parent"
+        android:maxLines="1"
+        android:layout_toEndOf="@+id/txtEmail"
+        android:layout_below="@+id/etEmail"
+        android:layout_alignBaseline="@+id/txtTelephone"
+        android:textSize="14sp"
+        android:inputType="textPersonName" />
+
+    <!-- Location -->
+    <TextView
+        android:id="@+id/txtLocation"
+        android:text="Location"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/etTelephone"/>
+
+    <EditText
+        android:id="@+id/etLocation"
+        android:background="@drawable/textbox"
+        android:layout_height="30dp"
+        android:layout_width="match_parent"
+        android:maxLines="1"
+        android:layout_toEndOf="@+id/txtPassword"
+        android:layout_below="@+id/etTelephone"
+        android:layout_alignBaseline="@+id/txtLocation"
+        android:textSize="14sp"
+        android:inputType="textPersonName" />
+
+    <!-- Password -->
+    <TextView
+        android:id="@+id/txtPassword"
+        android:text="Password"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/etLocation"/>
+
+    <EditText
+        android:id="@+id/etPassword"
+        android:background="@drawable/textbox"
+        android:layout_height="30dp"
+        android:layout_width="match_parent"
+        android:maxLines="1"
+        android:textSize="14sp"
+        android:inputType="textPersonName"
+        android:layout_toEndOf="@+id/txtPassword"
+        android:layout_below="@+id/etLocation"
+        android:layout_alignBaseline="@+id/txtPassword" />
+
+    <!-- Name of restoran -->
+    <TextView
+        android:id="@+id/txtRestoran"
+        android:text="Name of the restoran: "
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:id="@+id/tabRestoran" />
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/etPassword"
+        />
 
+    <EditText
+        android:id="@+id/etRestoran"
+        android:background="@drawable/textbox"
+        android:layout_height="30dp"
+        android:layout_width="match_parent"
+        android:maxLines="1"
+        android:textSize="14sp"
+        android:inputType="textPersonName"
+        android:layout_below="@+id/txtRestoran"
+        android:layout_marginTop="14dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true" />
 
+    <!-- Register Button -->
+    <Button android:id="@+id/btnRegister"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:text="Register"
+        android:background="@drawable/button_shadow"
+        android:layout_marginBottom="15dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true" />
 
-
-</LinearLayout>
+</RelativeLayout>
