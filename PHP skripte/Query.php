@@ -39,7 +39,7 @@ class Query{
     
     //check user before login
     public function checkUser($email, $password){
-        $result = $this->conn->prepare("SELECT name, surname FROM user WHERE email=? AND password=?");
+        $result = $this->conn->prepare("SELECT name, surname, email FROM user WHERE email=? AND password=?");
         $result->bind_param("ss", $email, $password);
 	    if ($result->execute()) {
             $user = $result->get_result()->fetch_assoc();
@@ -49,5 +49,35 @@ class Query{
             return NULL;
         }
     }
+  	
+	//check if user exists
+	public function isUserExisted($email){
+        $query = $this->conn->prepare("SELECT email FROM user WHERE email=?");
+        $query->bind_param("s", $email);
+		$query->execute();
+		$query->store_result();
+        if($query->num_rows > 0){
+			$query->close();
+            return true; //user existed
+        }else {
+			$query->close();
+            return false; //user not existed
+        }
+    }
+			
+	//new user
+	public function addUser($name, $surname, $email, $password){
+		$query = $this->conn->prepare("INSERT INTO user (name, surname, email, password) VALUES (?, ?, ?, ?)");
+        $query->bind_param("ssss", $name, $surname, $email, $password); 
+		$result = $query->execute();
+		$query->close(); 
+		if($result){
+			return true;
+        }else {
+            return false;
+        }
+	}
+	
+	//new restoran  
 }
 ?>
