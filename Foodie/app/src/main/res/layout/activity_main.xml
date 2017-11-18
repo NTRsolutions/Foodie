@@ -20,4 +20,13 @@
         android:layout_marginTop="104dp"
         android:id="@+id/textView"
         android:textSize="24sp" />
+
+    <Button
+        android:text="Log out"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView"
+        android:layout_alignStart="@+id/textView"
+        android:layout_marginTop="41dp"
+        android:id="@+id/btnLogout" />
 </RelativeLayout>
