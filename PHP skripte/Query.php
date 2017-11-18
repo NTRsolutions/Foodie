@@ -79,5 +79,27 @@ class Query{
 	}
 	
 	//new restoran  
+	public function addRestoran($name, $surname, $email, $password, $telephone, $location, $restoran){
+		$query = $this->conn->prepare("INSERT INTO user (name, surname, email, password) VALUES (?, ?, ?, ?)");
+		$query->bind_param("ssss", $name, $surname, $email, $password);
+		$result = $query->execute();
+		$query->close();
+		
+		$query = $this->conn->prepare("SELECT id FROM user WHERE email=?");
+        $query->bind_param("s", $email);
+	    $query->execute();
+        $user = $query->get_result()->fetch_assoc();
+        $query->close();
+        
+		$query = $this->conn->prepare("INSERT INTO restoran (user_id, name, location, telephone) VALUES (?, ?, ?, ?)");
+        $query->bind_param("ssss" ,$user["id"], $restoran, $location, $telephone);
+		$result2 = $query->execute();
+		$query->close();
+		if($result && $result2 && $user!=null){
+			return true;
+        }else {
+            return false;
+        }
+	}
 }
 ?>

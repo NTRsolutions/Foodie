@@ -8,6 +8,9 @@ $response["error"] = FALSE;;
 	$name = $_POST['name'];
 	$surname = $_POST['surname'];
 	$email = $_POST['email'];
+	$telephone = $_POST['telephone'];
+	$location = $_POST['location'];
+	$restoran = $_POST['restoran'];
 	$password = $_POST['password'];
 	
 	// check if user is already existed with the same email
@@ -20,18 +23,10 @@ $response["error"] = FALSE;;
 		//create a new user
 		if(isset($_POST['restoran'])){
 			//registration of restoran
-			$user = $db->addUser($name, $email, $password, $surname, $telephone, $restoran);
+			$user = $db->addRestoran($name, $surname, $email, $password, $telephone, $location, $restoran);
 			if ($user) {
 				// user stored successfully
 				$response["error"] = FALSE;
-				$response["user"]["name"] = $user["name"];
-				$response["user"]["surname"] = $user["surname"];
-				$response["user"]["email"] = $user["email"];
-				$response["user"]["telephone"] = $user["telephone"];
-				$response["user"]["restoran"] = $user["restoran"];
-				
-				//TO DO dodat unos lokacije
-				
 				echo json_encode($response);
 				
 			} else {
