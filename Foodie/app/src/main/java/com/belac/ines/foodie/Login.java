@@ -169,10 +169,9 @@ public class Login extends AppCompatActivity {
                     String name = jObj.getString("name");
                     String surname = jObj.getString("surname");
                     String email = jObj.getString("email");
-                    Toast.makeText(getApplicationContext(), name + " " + surname, Toast.LENGTH_LONG).show();
-                    session.setLogin(true);
-                    // Inserting row in users table
-                    db.addUser(name, surname, email);
+
+                    session.setLogin(true); //create session
+                    db.addUser(name, surname, email);  // Insert row in users table
 
                     Intent intent = new Intent(Login.this, Main.class);
                     startActivity(intent);
@@ -199,7 +198,7 @@ public class Login extends AppCompatActivity {
     public void createAccount(View arg0){
         Intent intent = new Intent(Login.this, Register.class);
         startActivity(intent);
-        //Login.this.finish();
+        Login.this.finish();
     }
 
 }
