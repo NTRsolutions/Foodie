@@ -55,7 +55,7 @@ public class Login extends AppCompatActivity {
         // Check if user is already logged in or not
         if (session.isLoggedIn()) {
             // User is already logged in. Take him to main activity
-            Intent intent = new Intent(Login.this, Main.class);
+            Intent intent = new Intent(Login.this, MainActivity.class);
             startActivity(intent);
             finish();
         }
@@ -173,7 +173,7 @@ public class Login extends AppCompatActivity {
                     session.setLogin(true); //create session
                     db.addUser(name, surname, email);  // Insert row in users table
 
-                    Intent intent = new Intent(Login.this, Main.class);
+                    Intent intent = new Intent(Login.this, MainActivity.class);
                     startActivity(intent);
                     Login.this.finish();
 

@@ -14,7 +14,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.belac.ines.foodie.Login;
-import com.belac.ines.foodie.Main;
+import com.belac.ines.foodie.MainActivity;
 import com.belac.ines.foodie.R;
 import com.belac.ines.foodie.app.AppConfig;
 import com.belac.ines.foodie.helper.SessionManager;
@@ -70,7 +70,7 @@ public class RestoranFragment extends Fragment{
         // Check if user is already logged in or not
         if (session.isLoggedIn()) {
             // User is already logged in. Take him to main activity
-            Intent intent = new Intent(getActivity(), Main.class);
+            Intent intent = new Intent(getActivity(), MainActivity.class);
             getActivity().startActivity(intent);
             getActivity().finish();
         }
