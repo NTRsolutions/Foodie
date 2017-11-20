@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
+    android:padding="@dimen/activity_horizontal_margin"
+    >
+
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:id="@+id/restoranImage"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="16dp"
+        android:src="@drawable/ic_account_circle_black_24dp"
+        android:scaleType="centerCrop"/>
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/restoranName"
+        android:textSize="16dp"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        android:layout_toRightOf="@+id/restoranImage"/>
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/restoranAddress"
+        android:textSize="12dp"
+        android:textColor="@color/colorAccent"
+        android:layout_below="@+id/restoranName"
+        android:paddingLeft="8dp"
+        android:layout_toRightOf="@+id/restoranImage"/>
+
+</RelativeLayout>
