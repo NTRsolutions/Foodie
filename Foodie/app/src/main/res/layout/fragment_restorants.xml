@@ -5,12 +5,40 @@
     tools:context="com.belac.ines.foodie.fragments.RestorantsFragment">
 
 
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+    <EditText
+        android:id="@+id/search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:textSize="14sp"
+        android:maxLines="1"
+        android:hint="Search here"
+        android:drawableRight="@drawable/ic_search_black_24dp"/>
+
+    <View
+        android:id="@+id/border"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/search"
+        android:background="@color/colorAccent"
+        />
+
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="vertical"
-        android:id="@+id/recycler_view">
+        android:id="@+id/recycler_view"
+        android:layout_below="@+id/search"
+        android:paddingTop="10dp"
+        >
 
     </android.support.v7.widget.RecyclerView>
-
+</LinearLayout>
 </FrameLayout>
