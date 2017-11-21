@@ -8,5 +8,6 @@ public class AppConfig {
 
     public static String URL_LOGIN = "https://glaikit-bather.000webhostapp.com/foodie/Login.php";
     public static String URL_REGISTER = "https://glaikit-bather.000webhostapp.com/foodie/Register.php";
+    public static String URL_RESTORANTS = "https://glaikit-bather.000webhostapp.com/foodie/AllRestorants.php";
 
 }
