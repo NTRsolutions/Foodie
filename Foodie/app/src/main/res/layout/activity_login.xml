@@ -28,7 +28,8 @@
         android:drawablePadding="20dp"
         android:layout_below="@+id/email"
         android:layout_alignStart="@+id/email"
-        android:hint="Password" />
+        android:hint="Password"
+        android:text="h"/>
 
     <Button
         android:id="@+id/btnLogin"
@@ -72,7 +73,8 @@
         android:id="@+id/email"
         android:hint="Email"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:text="h"/>
 
 
 </RelativeLayout>

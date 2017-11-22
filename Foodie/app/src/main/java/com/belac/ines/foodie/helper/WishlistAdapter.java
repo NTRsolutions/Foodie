@@ -6,8 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 
 import com.belac.ines.foodie.R;
 
@@ -18,7 +18,7 @@ import java.util.List;
  * Created by Ines on 20.11.2017..
  */
 
-public class RestoranAdapter extends RecyclerView.Adapter<RestoranAdapter.MyViewHolder>
+public class WishlistAdapter extends RecyclerView.Adapter<WishlistAdapter.MyViewHolder>
         implements Filterable{
 
     private List<Restoran> restoranList;
@@ -27,15 +27,18 @@ public class RestoranAdapter extends RecyclerView.Adapter<RestoranAdapter.MyView
     public class MyViewHolder extends RecyclerView.ViewHolder{
 
         public TextView name, address;
+        public RelativeLayout viewBackground, viewForeground;
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            name = (TextView) itemView.findViewById(R.id.restoranName);
-            address = (TextView) itemView.findViewById(R.id.restoranAddress);
+            name = (TextView) itemView.findViewById(R.id.name);
+            address = (TextView) itemView.findViewById(R.id.address);
+            viewBackground = (RelativeLayout) itemView.findViewById(R.id.view_background);
+            viewForeground = (RelativeLayout) itemView.findViewById(R.id.view_foreground);
         }
     }
 
-    public RestoranAdapter(List<Restoran> restoranList) {
+    public WishlistAdapter(List<Restoran> restoranList) {
         this.restoranList = restoranList;
         this.filteredList = restoranList;
     }
@@ -43,7 +46,7 @@ public class RestoranAdapter extends RecyclerView.Adapter<RestoranAdapter.MyView
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.restoran_list_row, parent, false);
+                .inflate(R.layout.wishlist_list_row, parent, false);
         return new MyViewHolder(itemView);
     }
 
@@ -101,4 +104,5 @@ public class RestoranAdapter extends RecyclerView.Adapter<RestoranAdapter.MyView
         notifyItemInserted(position);
 
     }
+
 }
