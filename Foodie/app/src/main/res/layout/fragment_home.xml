@@ -5,10 +5,24 @@
     tools:context="com.belac.ines.foodie.fragments.HomeFragment"
     android:id="@+id/fragment_home">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Home fragment" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="300dp" />
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical"
+        android:id="@+id/recycler_view"
+        android:paddingBottom="5dp"
+        >
+
+    </android.support.v7.widget.RecyclerView>
+    </LinearLayout>
 </FrameLayout>
