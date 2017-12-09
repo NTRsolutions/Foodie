@@ -6,8 +6,16 @@ package com.belac.ines.foodie.helper;
 
 public class Restoran {
     private String name, adress;
+    private double longitude, latitude;
 
     public Restoran() {
+    }
+
+    public Restoran(String name, String adress, double longitude, double latitude) {
+        this.name = name;
+        this.adress = adress;
+        this.longitude = longitude;
+        this.latitude = latitude;
     }
 
     public Restoran(String name, String adress) {
@@ -29,5 +37,21 @@ public class Restoran {
 
     public void setAdress(String adress) {
         this.adress = adress;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 }
