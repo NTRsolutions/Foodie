@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -13,13 +12,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.View;
+import android.widget.TextView;
 
 import com.belac.ines.foodie.fragments.HomeFragment;
 import com.belac.ines.foodie.fragments.MenuFragment;
+import com.belac.ines.foodie.wishlist.WishlistFragment;
+import com.belac.ines.foodie.wishlist.WishlistMenuFragment;
 import com.belac.ines.foodie.fragments.ProfileFragment;
 import com.belac.ines.foodie.fragments.RestorantsFragment;
-import com.belac.ines.foodie.fragments.WishlistFragment;
 import com.belac.ines.foodie.helper.SQLiteHandler;
 import com.belac.ines.foodie.helper.SessionManager;
 
@@ -51,8 +52,13 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        View header = navigationView.getHeaderView(0);
+        TextView name = (TextView)header.findViewById(R.id.profileName);
+        name.setText(user.get("name").toUpperCase());
 
         fragment = new HomeFragment();
         getSupportFragmentManager()
