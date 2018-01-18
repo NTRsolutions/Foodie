@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 
 import com.belac.ines.foodie.R;
+import com.belac.ines.foodie.classes.Restoran;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +44,7 @@ public class RestoranAdapter extends RecyclerView.Adapter<RestoranAdapter.MyView
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.restoran_list_row, parent, false);
+                .inflate(R.layout.list_row_restoran, parent, false);
         return new MyViewHolder(itemView);
     }
 

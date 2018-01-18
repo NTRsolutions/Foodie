@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import com.belac.ines.foodie.R;
 import com.belac.ines.foodie.app.AppConfig;
-import com.belac.ines.foodie.helper.Restoran;
+import com.belac.ines.foodie.classes.Restoran;
 import com.belac.ines.foodie.helper.RestoranAdapter;
 
 import org.json.JSONArray;
@@ -55,7 +55,7 @@ public class RestorantsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_restorants, container, false);
+        View view = inflater.inflate(R.layout.fragment_restorant, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         restoranAdapter = new RestoranAdapter(restoranList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -153,7 +153,7 @@ public class RestorantsFragment extends Fragment {
                     for(i=0; i < json.length(); i++) {
 
                         JSONObject jObject = json.getJSONObject(i);
-                        Restoran res = new Restoran(jObject.getString("name"), jObject.getString("address"));
+                        Restoran res = new Restoran(jObject.getInt("id"), jObject.getString("name"), jObject.getString("address"));
                         restoranList.add(res);
                     }
                     restoranAdapter.notifyDataSetChanged();

@@ -1,0 +1,97 @@
+<FrameLayout
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+        android:id="@+id/view_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorSecondary">
+
+        <ImageView
+            android:id="@+id/delete_icon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/ic_home_black_24dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@id/delete_icon"
+            android:text="DELETE"
+            android:textColor="@android:color/black"
+            android:textSize="13dp" />
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/view_foreground"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:padding="10dp">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:id="@+id/restoranImage"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:src="@drawable/ic_account_circle_black_24dp"
+            android:scaleType="centerCrop"/>
+
+        <TextView
+            android:text="Restoran Name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/restoranName"
+            android:textSize="16dp"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            android:layout_toRightOf="@+id/restoranImage"
+            />
+
+
+        <TextView
+            android:text="First Meal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/firstMeal"
+            android:textSize="12dp"
+            android:textColor="@color/colorAccent"
+            android:layout_below="@+id/restoranName"
+            android:paddingLeft="8dp"
+            android:layout_toRightOf="@+id/restoranImage"/>
+
+        <TextView
+            android:text="Second Meal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/secondMeal"
+            android:textSize="12dp"
+            android:textColor="@color/colorAccent"
+            android:layout_below="@+id/firstMeal"
+            android:paddingLeft="8dp"
+            android:layout_toRightOf="@+id/restoranImage"/>
+
+        <TextView
+            android:text="Third Meal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/thirdMeal"
+            android:textSize="12dp"
+            android:textColor="@color/colorAccent"
+            android:layout_below="@+id/secondMeal"
+            android:paddingLeft="8dp"
+            android:layout_toRightOf="@+id/restoranImage"/>
+
+    </RelativeLayout>
+
+</FrameLayout>

@@ -16,52 +16,55 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Ines on 20.11.2017..
+ * Created by Ines on 17.1.2018..
  */
 
-public class WishlistAdapter extends RecyclerView.Adapter<WishlistAdapter.MyViewHolder>
-        implements Filterable{
+public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder>
+        implements Filterable {
 
-    private List<Restoran> restoranList;
+    private List<Restoran> menuList;
     private List<Restoran> filteredList;
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
 
-        public TextView name, address;
+        public TextView name, firstMeal, secondMeal, thirdMeal;
         public RelativeLayout viewBackground, viewForeground;
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            name = (TextView) itemView.findViewById(R.id.name);
-            address = (TextView) itemView.findViewById(R.id.address);
+            name = (TextView) itemView.findViewById(R.id.restoranName);
+            firstMeal = (TextView) itemView.findViewById(R.id.firstMeal);
+            secondMeal = (TextView) itemView.findViewById(R.id.secondMeal);
+            thirdMeal = (TextView) itemView.findViewById(R.id.thirdMeal);
             viewBackground = (RelativeLayout) itemView.findViewById(R.id.view_background);
             viewForeground = (RelativeLayout) itemView.findViewById(R.id.view_foreground);
         }
     }
 
-    public WishlistAdapter(List<Restoran> restoranList) {
-        this.restoranList = restoranList;
+    public MenuAdapter(List<Restoran> restoranList) {
+        this.menuList = restoranList;
         this.filteredList = restoranList;
     }
 
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MenuAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_row_wishlist, parent, false);
-        return new MyViewHolder(itemView);
+                .inflate(R.layout.list_row_menu, parent, false);
+        return new MenuAdapter.MyViewHolder(itemView);
     }
 
+
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(MenuAdapter.MyViewHolder holder, int position) {
         Restoran restoran = filteredList.get(position);
         holder.name.setText(restoran.getName());
-        holder.address.setText(restoran.getAdress());
+        holder.firstMeal.setText("Appetizer: " + restoran.getMeni().getFirstMeal());
+        holder.secondMeal.setText("Main course: " + restoran.getMeni().getSecondMeal());
+        holder.thirdMeal.setText("Dessert: " + restoran.getMeni().getThirdMeal());
     }
 
     @Override
-    public int getItemCount() {
-        return filteredList.size();
-    }
+    public int getItemCount() { return filteredList.size(); }
 
     @Override
     public Filter getFilter() {
@@ -70,17 +73,19 @@ public class WishlistAdapter extends RecyclerView.Adapter<WishlistAdapter.MyView
             protected FilterResults performFiltering(CharSequence charSequence) {
                 String charString = charSequence.toString();
                 if(charString.isEmpty()){
-                    filteredList = restoranList;
+                    filteredList = menuList;
                 }else {
                     List<Restoran> filter = new ArrayList<>();
-                    for (Restoran row : restoranList){
+                    for (Restoran row : menuList){
                         if(row.getName().toLowerCase().contains(charString.toLowerCase())
-                                || row.getAdress().toLowerCase().contains(charString.toLowerCase())){
+                                || row.getMeni().getFirstMeal().toLowerCase().contains(charString.toLowerCase())
+                                || row.getMeni().getSecondMeal().toLowerCase().contains(charString.toLowerCase())
+                                || row.getMeni().getThirdMeal().toLowerCase().contains(charString.toLowerCase())){
                             filter.add(row);
                         }
                     }
                     filteredList = filter;
-                    }
+                }
 
                 FilterResults filterResults = new FilterResults();
                 filterResults.values = filteredList;
@@ -103,7 +108,5 @@ public class WishlistAdapter extends RecyclerView.Adapter<WishlistAdapter.MyView
     public void restoreItem(Restoran restoran, int position){
         filteredList.add(position, restoran);
         notifyItemInserted(position);
-
     }
-
 }

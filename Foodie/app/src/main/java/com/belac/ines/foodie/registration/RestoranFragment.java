@@ -54,7 +54,7 @@ public class RestoranFragment extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.restoran_fragment, container, false);
+        View v = inflater.inflate(R.layout.fragment_reg_restoran, container, false);
 
         etName = (EditText) v.findViewById(R.id.etName);
         etSurname = (EditText) v.findViewById(R.id.etSurname);

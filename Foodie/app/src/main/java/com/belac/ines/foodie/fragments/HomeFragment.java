@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,8 +23,10 @@ import android.widget.Toast;
 
 import com.belac.ines.foodie.R;
 import com.belac.ines.foodie.app.AppConfig;
-import com.belac.ines.foodie.helper.Restoran;
+import com.belac.ines.foodie.classes.Restoran;
 import com.belac.ines.foodie.helper.RestoranAdapter;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -33,6 +36,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -63,6 +67,8 @@ public class HomeFragment extends Fragment {
     private RecyclerView recyclerView;
     private RestoranAdapter restoranAdapter;
 
+    private FusedLocationProviderClient mFusedLocationClient;
+
     public HomeFragment() {}
 
     @Override
@@ -78,6 +84,18 @@ public class HomeFragment extends Fragment {
         mMapView= (MapView) view.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        mFusedLocationClient.getLastLocation()
+                .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        // Got last known location. In some rare situations this can be null.
+                        if (location != null) {
+                            // Logic to handle location object
+                        }
+                    }
+                });
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         restoranAdapter = new RestoranAdapter(restoranList);
@@ -109,6 +127,7 @@ public class HomeFragment extends Fragment {
                 mMap.getUiSettings().setRotateGesturesEnabled(true);
             }
         });
+
         return view;
     }
 

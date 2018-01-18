@@ -11,10 +11,12 @@ import android.view.View;
 
 public class WishlistTouchHelper extends ItemTouchHelper.SimpleCallback {
     private WishlistTouchHelperListener listener;
+    private boolean menuAdapter;
 
-    public WishlistTouchHelper(int dragDirs, int swipeDirs, WishlistTouchHelperListener listener) {
+    public WishlistTouchHelper(int dragDirs, int swipeDirs, WishlistTouchHelperListener listener, boolean adapter) {
         super(dragDirs, swipeDirs);
         this.listener = listener;
+        this.menuAdapter = adapter;
     }
 
     @Override
@@ -25,27 +27,47 @@ public class WishlistTouchHelper extends ItemTouchHelper.SimpleCallback {
     @Override
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
         if(viewHolder != null){
-            final View foregroundView = ((WishlistAdapter.MyViewHolder) viewHolder).viewForeground;
-            getDefaultUIUtil().onSelected(foregroundView);
+            if(menuAdapter){
+                final View foregroundView = ((MenuAdapter.MyViewHolder) viewHolder).viewForeground;
+                getDefaultUIUtil().onSelected(foregroundView);
+            }else{
+                final View foregroundView = ((WishlistAdapter.MyViewHolder) viewHolder).viewForeground;
+                getDefaultUIUtil().onSelected(foregroundView);
+            }
         }
     }
 
     @Override
     public void onChildDrawOver(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-        final View foregroundView = ((WishlistAdapter.MyViewHolder) viewHolder).viewForeground;
-        getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive);
+        if(menuAdapter) {
+            final View foregroundView = ((MenuAdapter.MyViewHolder) viewHolder).viewForeground;
+            getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive);
+        }else{
+            final View foregroundView = ((WishlistAdapter.MyViewHolder) viewHolder).viewForeground;
+            getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive);
+        }
     }
 
     @Override
     public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-        final View foregroundView = ((WishlistAdapter.MyViewHolder) viewHolder).viewForeground;
-        getDefaultUIUtil().clearView(foregroundView);
+        if(menuAdapter) {
+            final View foregroundView = ((MenuAdapter.MyViewHolder) viewHolder).viewForeground;
+            getDefaultUIUtil().clearView(foregroundView);
+        }else{
+            final View foregroundView = ((WishlistAdapter.MyViewHolder) viewHolder).viewForeground;
+            getDefaultUIUtil().clearView(foregroundView);
+        }
     }
 
     @Override
     public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-        final View foregroundView = ((WishlistAdapter.MyViewHolder) viewHolder).viewForeground;
-        getDefaultUIUtil().onDraw(c,  recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive);
+        if(menuAdapter) {
+            final View foregroundView = ((MenuAdapter.MyViewHolder) viewHolder).viewForeground;
+            getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive);
+        }else{
+            final View foregroundView = ((WishlistAdapter.MyViewHolder) viewHolder).viewForeground;
+            getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive);
+        }
     }
 
     @Override

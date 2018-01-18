@@ -33,7 +33,7 @@ public class Register extends AppCompatActivity {
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
         final PagerAdapter pagerAdapter = new PagerAdapter(
-                getSupportFragmentManager(), tabLayout.getTabCount());
+                getSupportFragmentManager(), tabLayout.getTabCount(), "registration");
         viewPager.setAdapter(pagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
