@@ -1,10 +1,11 @@
 package com.belac.ines.foodie.fragments;
 
-import android.app.Fragment;
+
 import android.app.ProgressDialog;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,14 +20,10 @@ import android.widget.Toast;
 
 import com.belac.ines.foodie.R;
 import com.belac.ines.foodie.app.AppConfig;
-import com.belac.ines.foodie.classes.Menu;
 import com.belac.ines.foodie.classes.Order;
-import com.belac.ines.foodie.classes.Restoran;
 import com.belac.ines.foodie.helper.ArchiveAdapter;
-import com.belac.ines.foodie.helper.MenuAdapter;
 import com.belac.ines.foodie.helper.SQLiteHandler;
 import com.belac.ines.foodie.helper.SessionManager;
-import com.belac.ines.foodie.wishlist.WishlistMenuFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,7 +47,7 @@ import java.util.List;
  * Created by Korisnik on 19.01.2018..
  */
 
-public class ArchiveFragment extends Fragment{
+public class ArchiveFragment extends Fragment {
 
     public static final int CONNECTION_TIMEOUT=10000;
     public static final int READ_TIMEOUT=15000;
@@ -83,7 +80,9 @@ public class ArchiveFragment extends Fragment{
         if(session.isLoggedIn()){
             SQLiteHandler db = new SQLiteHandler(getActivity());
             HashMap<String, String> user = db.getUserDetails();
-            new ArchiveFragment.AsyncOrders().execute(user.get("id"));
+            //new ArchiveFragment.AsyncOrders().execute(user.get("id"));
+            Order order = new Order((user.get("name") + " " + user.get("surname")), "Restoran ime", "10-02-1992");
+            orderList.add(order);
         }else{
             Toast.makeText(getActivity(), "User is not logged in", Toast.LENGTH_LONG);
         }

@@ -15,10 +15,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.belac.ines.foodie.fragments.ArchiveFragment;
 import com.belac.ines.foodie.fragments.HomeFragment;
 import com.belac.ines.foodie.fragments.MenuFragment;
 import com.belac.ines.foodie.wishlist.WishlistFragment;
-import com.belac.ines.foodie.wishlist.WishlistMenuFragment;
 import com.belac.ines.foodie.fragments.ProfileFragment;
 import com.belac.ines.foodie.fragments.RestorantsFragment;
 import com.belac.ines.foodie.helper.SQLiteHandler;
@@ -114,6 +114,8 @@ public class MainActivity extends AppCompatActivity
             fragment = new RestorantsFragment();
         } else if (id == R.id.nav_home) {
             fragment = new HomeFragment();
+        } else if (id == R.id.nav_arhiva){
+            fragment = new ArchiveFragment();
         }
         if(fragment != null){
             getSupportFragmentManager()
