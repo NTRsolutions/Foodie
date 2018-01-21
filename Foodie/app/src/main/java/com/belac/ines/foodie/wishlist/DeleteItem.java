@@ -76,7 +76,7 @@ public class DeleteItem {
                 // Append parameters to URL
                 Uri.Builder builder = new Uri.Builder()
                         .appendQueryParameter("user", name)
-                        .appendQueryParameter("restoranID", String.valueOf(ID))
+                        .appendQueryParameter("restoran", String.valueOf(ID))
                         .appendQueryParameter("action", "delete");
                 String query = builder.build().getEncodedQuery();
 

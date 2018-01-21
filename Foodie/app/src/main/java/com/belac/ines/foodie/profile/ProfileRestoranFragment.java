@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -43,20 +44,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class ProfileFragment extends Fragment {
+public class ProfileRestoranFragment extends Fragment implements View.OnClickListener {
 
     public static final int CONNECTION_TIMEOUT=10000;
     public static final int READ_TIMEOUT=15000;
 
-    private List<Restoran> menuList = new ArrayList<>();
     private TextView name, address, city, telephone, firstMeal, secondMeal, dessert;
-    int id;
+    int restoranID;
     private Switch wishlist;
     private String userEmail;
+    private Button btnOrder;
+    public String action;
 
-
-    public ProfileFragment() {}
-
+    public ProfileRestoranFragment() {
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState); }
@@ -73,13 +74,18 @@ public class ProfileFragment extends Fragment {
         secondMeal = (TextView) view.findViewById(R.id.restoranSecondMeal);
         dessert = (TextView) view.findViewById(R.id.restoranDessert);
         wishlist = (Switch) view.findViewById(R.id.switchWishlist);
+        btnOrder = (Button) view.findViewById(R.id.btnOrder);
 
         SessionManager session = new SessionManager(getActivity());
         if(session.isLoggedIn()){
             SQLiteHandler db = new SQLiteHandler(getActivity());
             HashMap<String, String> user = db.getUserDetails();
             userEmail = user.get("email");
-            new AsyncProfil().execute();
+            Bundle args = getArguments();
+            int index = args.getInt("id", 0);
+            restoranID = index;
+            action = "getData";
+            new AsyncProfil().execute(AppConfig.URL_PROFIL, "get");
         }else{
             Toast.makeText(getActivity(), "User is not logged in", Toast.LENGTH_LONG);
         }
@@ -87,16 +93,24 @@ public class ProfileFragment extends Fragment {
         wishlist.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                Snackbar snackbar = null;
                 if(b){
-                    //TODO: dodaj u wishlistu
+                    action = "insert";
+                    new AsyncProfil().execute(AppConfig.URL_WISHLIST, "add");
                 }else {
                     boolean error = new DeleteItem(userEmail, 10).isError();
                 }
             }
         });
 
+        btnOrder.setOnClickListener(this);
+
         return view;
+    }
+
+    @Override
+    public void onClick(View view) {
+        action = "insert";
+        new AsyncProfil().execute(AppConfig.URL_ORDER, "add");
     }
 
     private class AsyncProfil extends AsyncTask<String, String, String> {
@@ -115,7 +129,7 @@ public class ProfileFragment extends Fragment {
         @Override
         protected String doInBackground(String... params) {
             try {
-                url = new URL(AppConfig.URL_PROFIL);
+                url = new URL(params[0]);
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -132,8 +146,9 @@ public class ProfileFragment extends Fragment {
 
                 // Append parameters to URL
                 Uri.Builder builder = new Uri.Builder()
-                        .appendQueryParameter("user", "21")
-                        .appendQueryParameter("restoran", "10");
+                        .appendQueryParameter("user", userEmail)
+                        .appendQueryParameter("restoran", Integer.toString(restoranID))
+                        .appendQueryParameter("action", params[1]);
                 String query = builder.build().getEncodedQuery();
 
                 // Open connection for sending data
@@ -182,23 +197,23 @@ public class ProfileFragment extends Fragment {
                 JSONObject jObj = new JSONObject(result);
                 boolean error = jObj.getBoolean("error");
                 if (!error) {
-                    JSONArray json = jObj.getJSONArray("results");
-                    int i;
-                    for(i=0; i < json.length(); i++) {
+                    if(action.equals("getData")){
+                        JSONArray json = jObj.getJSONArray("results");
+                        int i;
+                        for(i=0; i < json.length(); i++) {
 
-                        JSONObject jObject = json.getJSONObject(i);
-                        name.setText(jObject.getString("name"));
-                        address.setText(jObject.getString("address"));
-                        telephone.setText(jObject.getString("telephone"));
-                        firstMeal.setText(jObject.getString("first"));
-                        secondMeal.setText(jObject.getString("second"));
-                        dessert.setText(jObject.getString("third"));
-                        wishlist.setChecked(Boolean.parseBoolean(jObject.getString("wishlist")));
-
+                            JSONObject jObject = json.getJSONObject(i);
+                            name.setText(jObject.getString("name"));
+                            address.setText(jObject.getString("address"));
+                            telephone.setText(jObject.getString("telephone"));
+                            firstMeal.setText(jObject.getString("first"));
+                            secondMeal.setText(jObject.getString("second"));
+                            dessert.setText(jObject.getString("third"));
+                            wishlist.setChecked(Boolean.parseBoolean(jObject.getString("wishlist")));
+                        }
                     }
                 } else if (error) {
-                    Toast.makeText(getActivity(), "Error", Toast.LENGTH_LONG).show();
-
+                    Toast.makeText(getActivity(), jObj.getString("error_msg"), Toast.LENGTH_LONG).show();
                 } else if (result.equalsIgnoreCase("exception") || result.equalsIgnoreCase("unsuccessful")) {
                     Toast.makeText(getActivity(), "OOPs! Something went wrong. Connection Problem.", Toast.LENGTH_LONG).show();
 

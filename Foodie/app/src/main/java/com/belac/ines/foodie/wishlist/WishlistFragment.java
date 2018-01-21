@@ -44,7 +44,7 @@ public class WishlistFragment extends Fragment{
                                  Bundle savedInstanceState) {
             View view = inflater.inflate(R.layout.fragment_wishlist, container, false);
             frameLayout = (FrameLayout) view.findViewById(R.id.frame_layout);
-            wAdapter = new WishlistAdapter(restoranList);
+            wAdapter = new WishlistAdapter(restoranList, getContext());
 
             TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
             tabLayout.addTab(tabLayout.newTab().setText("RESTORAN"));

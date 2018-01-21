@@ -71,7 +71,7 @@ public class WishlistRestoranFragment extends Fragment implements WishlistTouchH
         View view = inflater.inflate(R.layout.fragment_restorant, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         frameLayout = (FrameLayout) view.findViewById(R.id.frame_layout);
-        wAdapter = new WishlistAdapter(restoranList);
+        wAdapter = new WishlistAdapter(restoranList, getContext());
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());

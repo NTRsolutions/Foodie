@@ -72,7 +72,7 @@ public class WishlistMenuFragment extends Fragment implements WishlistTouchHelpe
         View view = inflater.inflate(R.layout.fragment_restorant, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         frameLayout = (FrameLayout) view.findViewById(R.id.frame_layout);
-        mAdapter = new MenuAdapter(restoranList);
+        mAdapter = new MenuAdapter(restoranList, getContext());
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());

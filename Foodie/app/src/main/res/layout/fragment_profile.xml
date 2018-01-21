@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.belac.ines.foodie.profile.ProfileFragment">
+    tools:context="com.belac.ines.foodie.profile.ProfileRestoranFragment">
 
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -49,6 +49,7 @@
                     android:id="@+id/switchWishlist"
                     android:layout_below="@+id/labelSwitch"
                     android:layout_alignStart="@+id/profileImage"
+                    android:checked="true"
                     />
             </LinearLayout>
 
