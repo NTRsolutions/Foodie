@@ -1,12 +1,154 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.belac.ines.foodie.fragments.ProfileFragment">
-+
-    <TextView
+    tools:context="com.belac.ines.foodie.profile.ProfileFragment">
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Profile fragment"/>
+        android:weightSum="1"
+        >
 
+        <RelativeLayout
+            android:id="@+id/profileData"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/activity_vertical_margin"
+            >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_centerVertical="true"
+                android:id="@+id/profileDataLeft">
+
+                <ImageView
+                    android:id="@+id/profileImage"
+                    android:layout_width="100dp"
+                    android:layout_height="120dp"
+                    app:srcCompat="@android:drawable/star_big_off"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Wishlist:"
+                    android:id="@+id/labelSwitch"
+                    android:layout_below="@+id/profileImage"
+                    android:textColor="@android:color/black"/>
+
+                <Switch
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/switchWishlist"
+                    android:layout_below="@+id/labelSwitch"
+                    android:layout_alignStart="@+id/profileImage"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/profileDataRight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/profileDataLeft"
+                android:orientation="vertical"
+                android:paddingLeft="20dp"
+                android:paddingTop="20dp"
+                android:layout_alignParentEnd="true">
+
+                <TextView
+                    android:id="@+id/restoranName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/restoranAddress"
+                    android:text="Adresa restorana"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/restoranName"/>
+
+                <TextView
+                    android:id="@+id/restoranTelephone"
+                    android:text="Telefon restorana"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/restoranAddress" />
+
+
+            </LinearLayout>
+        </RelativeLayout>
+
+
+        <TextView
+            android:id="@+id/labelMenu"
+            android:text="Menu of the day:"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:paddingStart="20dp"
+            />
+
+        <LinearLayout
+            android:id="@+id/restoranMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="@dimen/activity_vertical_margin"
+            android:elevation="2dp"
+            android:background="@drawable/background_menu"
+            android:padding="10dp"
+            >
+
+            <TextView
+                android:id="@+id/restoranFirstMeal"
+                android:text="Adresa restorana"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/labelMenu"
+                android:paddingTop="5dp"
+                android:textAlignment="center"/>
+
+            <TextView
+                android:id="@+id/restoranSecondMeal"
+                android:text="Grad restorana"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/restoranFirstMeal"
+                android:textAlignment="center"/>
+
+            <TextView
+                android:id="@+id/restoranDessert"
+                android:text="Telefon restorana"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/restoranSecondMeal"
+                android:textAlignment="center"/>
+
+            <Button
+                android:text="ORDER"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnOrder"
+                android:layout_marginTop="10dp"
+                android:layout_below="@+id/q"
+                android:background="@drawable/button_shadow_order"
+                android:textSize="14sp"
+                android:textStyle="normal|bold"
+                android:textAlignment="center"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@android:color/black"/>
+
+
+
+        </LinearLayout>
+    </LinearLayout>
 </FrameLayout>

@@ -49,7 +49,7 @@ public class DeleteItem {
         return error;
     }
 
-    public class AsyncWishlist extends AsyncTask<String, String, String> {
+    private class AsyncWishlist extends AsyncTask<String, String, String> {
 
         @Override
         protected void onPreExecute() {}
