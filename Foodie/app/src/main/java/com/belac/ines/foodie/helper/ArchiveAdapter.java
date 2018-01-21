@@ -1,14 +1,22 @@
 package com.belac.ines.foodie.helper;
 
+import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.belac.ines.foodie.MainActivity;
 import com.belac.ines.foodie.R;
 import com.belac.ines.foodie.classes.Order;
 import com.belac.ines.foodie.classes.Restoran;
@@ -35,13 +43,21 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.MyViewHo
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView userName, restoranName, orderDate;
+        public TextView userName, restoranName, orderDate, orderPrice;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             userName = (TextView) itemView.findViewById(R.id.userName);
             restoranName = (TextView) itemView.findViewById(R.id.restoranName);
             orderDate = (TextView) itemView.findViewById(R.id.orderDate);
+            orderPrice = (TextView) itemView.findViewById(R.id.orderPrice);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showPopup(v);
+
+                }
+            });
         }
     }
     @Override
@@ -58,6 +74,7 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.MyViewHo
         holder.userName.setText(order.getUserName());
         holder.restoranName.setText(order.getRestoranName());
         holder.orderDate.setText(order.getDatum());
+        holder.orderPrice.setText(order.getPrice());
     }
 
         @Override
@@ -96,4 +113,10 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.MyViewHo
                 }
             };
         }
+
+    public void showPopup(View anchorView) {
+
+
+
+    }
 }

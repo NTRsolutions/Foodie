@@ -80,9 +80,7 @@ public class ArchiveFragment extends Fragment {
         if(session.isLoggedIn()){
             SQLiteHandler db = new SQLiteHandler(getActivity());
             HashMap<String, String> user = db.getUserDetails();
-            //new ArchiveFragment.AsyncOrders().execute(user.get("id"));
-            Order order = new Order((user.get("name") + " " + user.get("surname")), "Restoran ime", "10-02-1992");
-            orderList.add(order);
+            new ArchiveFragment.AsyncOrders().execute(user.get("id"));
         }else{
             Toast.makeText(getActivity(), "User is not logged in", Toast.LENGTH_LONG);
         }
@@ -138,7 +136,7 @@ public class ArchiveFragment extends Fragment {
 
                 // Append parameters to URL
                 Uri.Builder builder = new Uri.Builder()
-                        .appendQueryParameter("user",params[0]);
+                        .appendQueryParameter("user", "21");
                 String query = builder.build().getEncodedQuery();
 
                 // Open connection for sending data
@@ -192,7 +190,7 @@ public class ArchiveFragment extends Fragment {
                     for(i=0; i < json.length(); i++) {
 
                         JSONObject jObject = json.getJSONObject(i);;
-                        Order order = new Order(jObject.getString("user"), jObject.getString("restoran"), jObject.getString("date"));
+                        Order order = new Order((jObject.getString("user")+" "+jObject.getString("surname")), jObject.getString("name"), jObject.getString("date"), jObject.getString("price"));
                         orderList.add(order);
                     }
                     orderAdapter.notifyDataSetChanged();

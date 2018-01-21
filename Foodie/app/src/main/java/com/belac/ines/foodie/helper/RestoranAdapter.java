@@ -33,6 +33,7 @@ public class RestoranAdapter extends RecyclerView.Adapter<RestoranAdapter.MyView
             super(itemView);
             name = (TextView) itemView.findViewById(R.id.restoranName);
             address = (TextView) itemView.findViewById(R.id.restoranAddress);
+
         }
     }
 
