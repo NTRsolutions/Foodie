@@ -13,6 +13,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -57,7 +58,7 @@ public class RestorantsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_restorant, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-        restoranAdapter = new RestoranAdapter(restoranList);
+        restoranAdapter = new RestoranAdapter(restoranList, getContext());
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -79,6 +80,7 @@ public class RestorantsFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable query) {}
         });
+
         return view;
     }
 

@@ -1,5 +1,9 @@
 package com.belac.ines.foodie.helper;
 
+import android.content.Context;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,8 +13,10 @@ import android.widget.Filterable;
 import android.widget.TextView;
 
 
+import com.belac.ines.foodie.MainActivity;
 import com.belac.ines.foodie.R;
 import com.belac.ines.foodie.classes.Restoran;
+import com.belac.ines.foodie.profile.ProfileRestoranFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,12 +26,13 @@ import java.util.List;
  */
 
 public class RestoranAdapter extends RecyclerView.Adapter<RestoranAdapter.MyViewHolder>
-        implements Filterable{
+        implements Filterable {
 
     private List<Restoran> restoranList;
     private List<Restoran> filteredList;
+    Context context;
 
-    public class MyViewHolder extends RecyclerView.ViewHolder{
+    public class MyViewHolder extends RecyclerView.ViewHolder {
 
         public TextView name, address;
 
@@ -33,12 +40,28 @@ public class RestoranAdapter extends RecyclerView.Adapter<RestoranAdapter.MyView
             super(itemView);
             name = (TextView) itemView.findViewById(R.id.restoranName);
             address = (TextView) itemView.findViewById(R.id.restoranAddress);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int id = filteredList.get(getPosition()).getID();
+                    Fragment fragment = new ProfileRestoranFragment();
+                    Bundle args = new Bundle();
+                    args.putInt("id", id);
+                    fragment.setArguments(args);
+                    FragmentManager fragmentManager = ((MainActivity) context).getSupportFragmentManager();
+                    fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
+
+                }
+            });
         }
     }
 
-    public RestoranAdapter(List<Restoran> restoranList) {
+    public RestoranAdapter(List<Restoran> restoranList, Context context) {
         this.restoranList = restoranList;
         this.filteredList = restoranList;
+        this.context = context;
+
     }
 
     @Override
@@ -53,6 +76,7 @@ public class RestoranAdapter extends RecyclerView.Adapter<RestoranAdapter.MyView
         Restoran restoran = filteredList.get(position);
         holder.name.setText(restoran.getName());
         holder.address.setText(restoran.getAdress());
+
     }
 
     @Override
@@ -66,18 +90,18 @@ public class RestoranAdapter extends RecyclerView.Adapter<RestoranAdapter.MyView
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
                 String charString = charSequence.toString();
-                if(charString.isEmpty()){
+                if (charString.isEmpty()) {
                     filteredList = restoranList;
-                }else {
+                } else {
                     List<Restoran> filter = new ArrayList<>();
-                    for (Restoran row : restoranList){
-                        if(row.getName().toLowerCase().contains(charString.toLowerCase())
-                                || row.getAdress().toLowerCase().contains(charString.toLowerCase())){
+                    for (Restoran row : restoranList) {
+                        if (row.getName().toLowerCase().contains(charString.toLowerCase())
+                                || row.getAdress().toLowerCase().contains(charString.toLowerCase())) {
                             filter.add(row);
                         }
                     }
                     filteredList = filter;
-                    }
+                }
 
                 FilterResults filterResults = new FilterResults();
                 filterResults.values = filteredList;
@@ -92,14 +116,15 @@ public class RestoranAdapter extends RecyclerView.Adapter<RestoranAdapter.MyView
         };
     }
 
-    public void removeItem(int position){
+    public void removeItem(int position) {
         filteredList.remove(position);
         notifyItemRemoved(position);
     }
 
-    public void restoreItem(Restoran restoran, int position){
+    public void restoreItem(Restoran restoran, int position) {
         filteredList.add(position, restoran);
         notifyItemInserted(position);
 
     }
+
 }

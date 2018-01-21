@@ -98,7 +98,7 @@ public class HomeFragment extends Fragment {
                 });
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-        restoranAdapter = new RestoranAdapter(restoranList);
+        restoranAdapter = new RestoranAdapter(restoranList, getContext());
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());

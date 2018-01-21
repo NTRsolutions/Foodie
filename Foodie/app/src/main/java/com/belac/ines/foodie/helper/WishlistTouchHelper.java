@@ -35,6 +35,7 @@ public class WishlistTouchHelper extends ItemTouchHelper.SimpleCallback {
                 getDefaultUIUtil().onSelected(foregroundView);
             }
         }
+
     }
 
     @Override
@@ -83,4 +84,6 @@ public class WishlistTouchHelper extends ItemTouchHelper.SimpleCallback {
     public interface WishlistTouchHelperListener {
         void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position);
     }
+
+
 }
