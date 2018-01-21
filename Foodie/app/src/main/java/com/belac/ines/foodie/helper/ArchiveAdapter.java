@@ -73,8 +73,8 @@ public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.MyViewHo
         Order order = filteredList.get(position);
         holder.userName.setText(order.getUserName());
         holder.restoranName.setText(order.getRestoranName());
-        holder.orderDate.setText(order.getDatum());
-        holder.orderPrice.setText(order.getPrice());
+        holder.orderDate.setText("Date of order: " + order.getDatum());
+        holder.orderPrice.setText("Price of order: " + order.getPrice());
     }
 
         @Override
