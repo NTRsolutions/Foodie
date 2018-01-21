@@ -22,6 +22,10 @@
             android:id="@+id/nav_restoran"
             android:icon="@drawable/ic_local_dining_black_24dp"
             android:title="Restorants" />
+        <item
+            android:id="@+id/nav_arhiva"
+            android:icon="@drawable/ic_archive_black_24dp"
+            android:title="Arhiva narudzbi" />
     </group>
 
 </menu>
