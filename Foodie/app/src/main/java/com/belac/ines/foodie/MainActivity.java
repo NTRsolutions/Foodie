@@ -17,8 +17,9 @@ import android.widget.TextView;
 
 import com.belac.ines.foodie.fragments.HomeFragment;
 import com.belac.ines.foodie.fragments.MenuFragment;
+import com.belac.ines.foodie.profile.ProfilKorisnikFragment;
 import com.belac.ines.foodie.wishlist.WishlistFragment;
-import com.belac.ines.foodie.profile.ProfileFragment;
+import com.belac.ines.foodie.profile.ProfileRestoranFragment;
 import com.belac.ines.foodie.fragments.RestorantsFragment;
 import com.belac.ines.foodie.helper.SQLiteHandler;
 import com.belac.ines.foodie.helper.SessionManager;
@@ -57,7 +58,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         View header = navigationView.getHeaderView(0);
         TextView name = (TextView)header.findViewById(R.id.profileName);
-        name.setText(user.get("name").toUpperCase());
+       // name.setText(user.get("name").toUpperCase());
 
         fragment = new HomeFragment();
         getSupportFragmentManager()
@@ -104,7 +105,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
         Fragment fragment = null;
         if (id == R.id.nav_profile) {
-            fragment = new ProfileFragment();
+            fragment = new ProfilKorisnikFragment();
         } else if (id == R.id.nav_menu) {
             fragment = new MenuFragment();
         } else if (id == R.id.nav_wishlist) {
