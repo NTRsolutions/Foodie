@@ -89,6 +89,48 @@
         android:textSize="14sp"
         android:inputType="textPersonName" />
 
+    <!-- Address -->
+    <TextView
+        android:id="@+id/txtAddress"
+        android:text="Address"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/etPassword"/>
+
+    <EditText
+        android:id="@+id/etAddress"
+        android:background="@drawable/textbox"
+        android:layout_height="30dp"
+        android:layout_width="match_parent"
+        android:maxLines="1"
+        android:layout_toEndOf="@+id/txtAddress"
+        android:layout_below="@+id/etPassword"
+        android:layout_alignBaseline="@+id/txtAddress"
+        android:textSize="14sp"
+        android:inputType="textPersonName" />
+
+    <!-- Telephone -->
+    <TextView
+        android:id="@+id/txtTelephone"
+        android:text="Telephone"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/txtAddress"/>
+
+    <EditText
+        android:id="@+id/etTelephone"
+        android:background="@drawable/textbox"
+        android:layout_height="30dp"
+        android:layout_width="match_parent"
+        android:maxLines="1"
+        android:layout_toEndOf="@+id/txtTelephone"
+        android:layout_below="@+id/etAddress"
+        android:layout_alignBaseline="@+id/txtTelephone"
+        android:textSize="14sp"
+        android:inputType="textPersonName" />
+
     <!-- Register Button -->
     <Button android:id="@+id/btnRegister"
         android:layout_width="wrap_content"

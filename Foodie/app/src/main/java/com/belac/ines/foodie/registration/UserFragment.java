@@ -43,6 +43,8 @@ public class UserFragment extends Fragment{
     private EditText etSurname;
     private EditText etEmail;
     private EditText etPassword;
+    private EditText etAddress;
+    private EditText etTelephone;
     private Button btRegister;
 
     private SessionManager session;
@@ -59,6 +61,8 @@ public class UserFragment extends Fragment{
         etSurname = (EditText) v.findViewById(R.id.etSurname);
         etEmail = (EditText) v.findViewById(R.id.etEmail);
         etPassword = (EditText) v.findViewById(R.id.etPassword);
+        etAddress = (EditText) v.findViewById(R.id.etAddress);
+        etTelephone = (EditText) v.findViewById(R.id.etTelephone);
         btRegister = (Button) v.findViewById(R.id.btnRegister);
 
         session = new SessionManager(getActivity());
@@ -78,10 +82,13 @@ public class UserFragment extends Fragment{
                 final String surname = etSurname.getText().toString().trim();
                 final String email = etEmail.getText().toString().trim();
                 final String password = etPassword.getText().toString().trim();
+                final String address = etAddress.getText().toString().trim();
+                final String telephone = etTelephone.getText().toString().trim();
 
-                if(!email.isEmpty() && !password.isEmpty() && !name.isEmpty() && !surname.isEmpty() ) {
+                if(!email.isEmpty() && !password.isEmpty() && !name.isEmpty() && !surname.isEmpty()
+                        && !address.isEmpty() && !telephone.isEmpty()) {
                     //registracija
-                    new AsyncRegister().execute(name, surname, email,password);
+                    new AsyncRegister().execute(name, surname, email, password, address, telephone);
                 }else{
                     Toast.makeText(getActivity(), "OOPs! Please enter all informations.", Toast.LENGTH_LONG).show();
                 }
@@ -132,7 +139,9 @@ public class UserFragment extends Fragment{
                         .appendQueryParameter("name", params[0])
                         .appendQueryParameter("surname", params[1])
                         .appendQueryParameter("email", params[2])
-                        .appendQueryParameter("password", params[3]);
+                        .appendQueryParameter("password", params[3])
+                        .appendQueryParameter("address", params[4])
+                        .appendQueryParameter("telephone", params[5]);
                 String query = builder.build().getEncodedQuery();
 
                 // Open connection for sending data

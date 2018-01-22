@@ -140,7 +140,7 @@ public class RestoranFragment extends Fragment{
                         .appendQueryParameter("surname", params[1])
                         .appendQueryParameter("email", params[2])
                         .appendQueryParameter("telephone", params[3])
-                        .appendQueryParameter("location", params[4])
+                        .appendQueryParameter("address", params[4])
                         .appendQueryParameter("restoran", params[5])
                         .appendQueryParameter("password", params[6]);
                 String query = builder.build().getEncodedQuery();
