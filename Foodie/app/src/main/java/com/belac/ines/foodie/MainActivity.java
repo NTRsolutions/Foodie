@@ -3,6 +3,7 @@ package com.belac.ines.foodie;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -13,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.belac.ines.foodie.fragments.ArchiveFragment;
@@ -22,16 +24,20 @@ import com.belac.ines.foodie.fragments.RestorantsFragment;
 import com.belac.ines.foodie.helper.SQLiteHandler;
 import com.belac.ines.foodie.helper.SessionManager;
 import com.belac.ines.foodie.profile.ProfilKorisnikFragment;
+import com.belac.ines.foodie.profile.ProfileRestoranFragment;
 import com.belac.ines.foodie.wishlist.WishlistFragment;
 
 import java.util.HashMap;
 
+import butterknife.BindView;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private SQLiteHandler db;
-    private DrawerLayout drawer;
-    private Fragment fragment = null;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.fragment_container) FrameLayout fragmentContainer;
+    @BindView(R.id.drawer_layout) DrawerLayout drawer;
+    @BindView(R.id.nav_view) NavigationView navigationView;
 
 
     @Override
@@ -39,29 +45,21 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //initToolbar
         setSupportActionBar(toolbar);
-        db = new SQLiteHandler(getApplicationContext());
-        HashMap<String, String> user = db.getUserDetails();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
 
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        //initDrawer
         navigationView.setNavigationItemSelectedListener(this);
         View header = navigationView.getHeaderView(0);
-        TextView name = (TextView)header.findViewById(R.id.profileName);
-       // name.setText(user.get("name").toUpperCase());
+        TextView name = (TextView)header.findViewById(R.id.header_text);
+        name.setText(String.format("%s %s", SessionManager.getName(getApplicationContext()),
+                SessionManager.getSurname(getApplicationContext())));
 
-        fragment = new HomeFragment();
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.fragment_container, fragment)
+                .add(R.id.fragment_container, new HomeFragment())
                 .commit();
 
     }
@@ -92,15 +90,25 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.action_settings) {
             logoutUser();
             return true;
+        } else if (id == android.R.id.home) {
+            drawer.openDrawer(GravityCompat.START);
         }
         return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+
+        Fragment profile;
+        if (SessionManager.getType(getApplicationContext()) == 1) {
+            profile = new ProfilKorisnikFragment();
+        } else {
+            profile = new ProfileRestoranFragment();
+        }
+
         Fragment fragment = null;
         if (id == R.id.nav_profile) {
             fragment = new ProfilKorisnikFragment();
@@ -127,7 +135,6 @@ public class MainActivity extends AppCompatActivity
 
     private void logoutUser() {
         SessionManager.logout(getApplicationContext());
-        db.deleteUsers(); //delete user from SQLite baze
         Intent intent = new Intent(MainActivity.this, Login.class);
         startActivity(intent);
         finish();

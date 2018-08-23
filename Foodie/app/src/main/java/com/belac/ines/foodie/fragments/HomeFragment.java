@@ -81,21 +81,12 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        mMapView= (MapView) view.findViewById(R.id.mapView);
+        mMapView= (MapView) view.findViewById(R.id.map_view);
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
-        mFusedLocationClient.getLastLocation()
-                .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        // Got last known location. In some rare situations this can be null.
-                        if (location != null) {
-                            // Logic to handle location object
-                        }
-                    }
-                });
+
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         restoranAdapter = new RestoranAdapter(restoranList, getContext());
