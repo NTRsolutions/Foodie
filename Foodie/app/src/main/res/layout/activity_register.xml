@@ -7,20 +7,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.belac.ines.foodie.registration.Register">
+    tools:context="com.belac.ines.foodie.features.signup.SignUpActivity"
+    >
 
 
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
-        android:elevation="6dp"
-        android:theme="?attr/actionBarTheme"
-        android:popupTheme="@style/Theme.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark"
         android:minHeight="?attr/actionBarSize"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:id="@+id/toolbar"/>
+        android:id="@+id/toolbar"
+        />
 
 
     <android.support.design.widget.TabLayout
@@ -30,9 +30,9 @@
         android:layout_below="@+id/toolbar"
         android:layout_alignParentStart="true"
         android:background="?attr/colorPrimary"
-        android:elevation="6dp"
         android:minHeight="?attr/actionBarSize"
-        app:tabIndicatorColor="@color/colorSecondary"/>
+        app:tabIndicatorColor="@color/colorSecondary"
+        />
 
     <LinearLayout
         android:id="@+id/footer"
@@ -40,7 +40,8 @@
         android:layout_width="fill_parent"
         android:layout_height="90dip"
         android:background="@drawable/footer"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        >
     </LinearLayout>
 
     <android.support.v4.view.ViewPager
@@ -51,6 +52,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="90dip"/>
+        android:layout_marginBottom="90dip"
+        />
 
 </RelativeLayout>
