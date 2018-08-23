@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity
 
         navigationView.setNavigationItemSelectedListener(this);
         View header = navigationView.getHeaderView(0);
-        TextView name = (TextView)header.findViewById(R.id.profileName);
+        TextView name = (TextView)header.findViewById(R.id.header_text);
         name.setText(String.format("%s %s", SessionManager.getName(getApplicationContext()),
                 SessionManager.getSurname(getApplicationContext())));
 
