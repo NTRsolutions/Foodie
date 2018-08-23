@@ -14,10 +14,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.belac.ines.foodie.Login;
-import com.belac.ines.foodie.MainActivity;
 import com.belac.ines.foodie.R;
 import com.belac.ines.foodie.api.AppConfig;
-import com.belac.ines.foodie.helper.SessionManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,7 +45,6 @@ public class UserFragment extends Fragment{
     private EditText etTelephone;
     private Button btRegister;
 
-    private SessionManager session;
     public static final int CONNECTION_TIMEOUT=10000;
     public static final int READ_TIMEOUT=15000;
 
@@ -65,15 +62,8 @@ public class UserFragment extends Fragment{
         etTelephone = (EditText) v.findViewById(R.id.etTelephone);
         btRegister = (Button) v.findViewById(R.id.btnRegister);
 
-        session = new SessionManager(getActivity());
 
-        // Check if user is already logged in or not
-        if (session.isLoggedIn()) {
-            // User is already logged in. Take him to main activity
-            Intent intent = new Intent(getActivity(), MainActivity.class);
-            getActivity().startActivity(intent);
-            getActivity().finish();
-        }
+
 
         btRegister.setOnClickListener(new View.OnClickListener() {
             @Override

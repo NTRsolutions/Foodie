@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private SQLiteHandler db;
-    private SessionManager session;
     private DrawerLayout drawer;
     private Fragment fragment = null;
 
@@ -42,7 +41,6 @@ public class MainActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        session = new SessionManager(getApplicationContext());
         db = new SQLiteHandler(getApplicationContext());
         HashMap<String, String> user = db.getUserDetails();
 
@@ -128,7 +126,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void logoutUser() {
-        session.setLogin(false); //delete session
+        SessionManager.logout(getApplicationContext());
         db.deleteUsers(); //delete user from SQLite baze
         Intent intent = new Intent(MainActivity.this, Login.class);
         startActivity(intent);

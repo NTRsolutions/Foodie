@@ -22,8 +22,6 @@ import com.belac.ines.foodie.R;
 import com.belac.ines.foodie.api.AppConfig;
 import com.belac.ines.foodie.classes.Order;
 import com.belac.ines.foodie.helper.ArchiveAdapter;
-import com.belac.ines.foodie.helper.SQLiteHandler;
-import com.belac.ines.foodie.helper.SessionManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -75,15 +73,6 @@ public class ArchiveFragment extends Fragment {
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
         recyclerView.setAdapter(orderAdapter);
 
-        //provjera sesije i dohvacanje ID ulogiranog korisnika
-        SessionManager session = new SessionManager(getActivity());
-        if(session.isLoggedIn()){
-            SQLiteHandler db = new SQLiteHandler(getActivity());
-            HashMap<String, String> user = db.getUserDetails();
-            new ArchiveFragment.AsyncOrders().execute(user.get("email"));
-        }else{
-            Toast.makeText(getActivity(), "User is not logged in", Toast.LENGTH_LONG);
-        }
 
         //search
         search = (EditText) view.findViewById(R.id.search);

@@ -26,8 +26,6 @@ import com.belac.ines.foodie.api.AppConfig;
 import com.belac.ines.foodie.classes.Menu;
 import com.belac.ines.foodie.helper.MenuAdapter;
 import com.belac.ines.foodie.classes.Restoran;
-import com.belac.ines.foodie.helper.SQLiteHandler;
-import com.belac.ines.foodie.helper.SessionManager;
 import com.belac.ines.foodie.helper.WishlistTouchHelper;
 
 import org.json.JSONArray;
@@ -45,7 +43,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class WishlistMenuFragment extends Fragment implements WishlistTouchHelper.WishlistTouchHelperListener {
@@ -82,15 +79,6 @@ public class WishlistMenuFragment extends Fragment implements WishlistTouchHelpe
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new WishlistTouchHelper(0, ItemTouchHelper.LEFT, this, true);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
 
-        SessionManager session = new SessionManager(getActivity());
-        if(session.isLoggedIn()){
-            SQLiteHandler db = new SQLiteHandler(getActivity());
-            HashMap<String, String> user = db.getUserDetails();
-            userEmail = user.get("email");
-            new WishlistMenuFragment.AsyncWishlist().execute(userEmail);
-        }else{
-            Toast.makeText(getActivity(), "User is not logged in", Toast.LENGTH_LONG);
-        }
 
 
         search = (EditText) view.findViewById(R.id.search);
