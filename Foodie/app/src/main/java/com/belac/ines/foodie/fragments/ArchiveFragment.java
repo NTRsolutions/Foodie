@@ -19,7 +19,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.belac.ines.foodie.R;
-import com.belac.ines.foodie.app.AppConfig;
+import com.belac.ines.foodie.api.AppConfig;
 import com.belac.ines.foodie.classes.Order;
 import com.belac.ines.foodie.helper.ArchiveAdapter;
 import com.belac.ines.foodie.helper.SQLiteHandler;

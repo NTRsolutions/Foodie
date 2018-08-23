@@ -15,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.belac.ines.foodie.R;
-import com.belac.ines.foodie.app.AppConfig;
 import com.belac.ines.foodie.helper.SQLiteHandler;
 import com.belac.ines.foodie.helper.SessionManager;
 import com.belac.ines.foodie.wishlist.DeleteItem;

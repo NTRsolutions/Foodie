@@ -22,7 +22,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.belac.ines.foodie.R;
-import com.belac.ines.foodie.app.AppConfig;
+import com.belac.ines.foodie.api.AppConfig;
 import com.belac.ines.foodie.classes.Restoran;
 import com.belac.ines.foodie.helper.RestoranAdapter;
 import com.google.android.gms.location.FusedLocationProviderClient;

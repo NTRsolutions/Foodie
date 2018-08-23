@@ -5,7 +5,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-import com.belac.ines.foodie.app.AppConfig;
+import com.belac.ines.foodie.api.AppConfig;
 import com.belac.ines.foodie.classes.Menu;
 import com.belac.ines.foodie.classes.Restoran;
 

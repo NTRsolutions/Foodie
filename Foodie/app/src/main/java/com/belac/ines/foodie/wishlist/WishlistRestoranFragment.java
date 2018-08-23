@@ -22,7 +22,7 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.belac.ines.foodie.R;
-import com.belac.ines.foodie.app.AppConfig;
+import com.belac.ines.foodie.api.AppConfig;
 import com.belac.ines.foodie.classes.Restoran;
 import com.belac.ines.foodie.helper.SQLiteHandler;
 import com.belac.ines.foodie.helper.SessionManager;

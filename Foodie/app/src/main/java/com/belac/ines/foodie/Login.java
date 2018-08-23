@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -11,7 +12,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.belac.ines.foodie.app.AppConfig;
+import com.belac.ines.foodie.api.APIService;
+import com.belac.ines.foodie.api.AppConfig;
+import com.belac.ines.foodie.api.RetrofitClient;
+import com.belac.ines.foodie.api.models.LoginResponse;
 import com.belac.ines.foodie.helper.SQLiteHandler;
 import com.belac.ines.foodie.helper.SessionManager;
 import com.belac.ines.foodie.registration.Register;
@@ -30,168 +34,81 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class Login extends AppCompatActivity {
 
-    public static final int CONNECTION_TIMEOUT=10000;
-    public static final int READ_TIMEOUT=15000;
-    private EditText etEmail;
-    private EditText etPassword;
-    private Button btLogin;
-    private SessionManager session;
-    private SQLiteHandler db;
+    @BindView(R.id.email) EditText etEmail;
+    @BindView(R.id.lozinka) EditText etPassword;
+
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        etEmail = (EditText) findViewById(R.id.email);
-        etPassword = (EditText) findViewById(R.id.lozinka);
-        btLogin = (Button) findViewById(R.id.btnLogin);
+        ButterKnife.bind(this);
+        progressDialog = new ProgressDialog(this);
 
-        db = new SQLiteHandler(getApplicationContext());
-        session = new SessionManager(getApplicationContext());
-
-        // Check if user is already logged in or not
-        if (session.isLoggedIn()) {
-            // User is already logged in. Take him to main activity
+         /*   // User is already logged in. Take him to main activity
             Intent intent = new Intent(Login.this, MainActivity.class);
             startActivity(intent);
-            finish();
-        }
+            finish(); */
     }
 
     // Triggers when LOGIN Button clicked
-    public void checkLogin(View arg0) {
+    @OnClick({R.id.btnLogin}) void onClickLogin() {
 
         final String email = etEmail.getText().toString().trim();
         final String password = etPassword.getText().toString().trim();
 
         if(!email.isEmpty() && !password.isEmpty() ) {
-            new AsyncLogin().execute(email,password);
-        }else{
-            Toast.makeText(Login.this, "OOPs! Please enter your email and password.", Toast.LENGTH_LONG).show();
-        }
-    }
+            showProgressDialog();
 
-    private class AsyncLogin extends AsyncTask<String, String, String> {
-        ProgressDialog pdLoading = new ProgressDialog(Login.this);
-        HttpURLConnection conn;
-        URL url = null;
+            RetrofitClient.instance()
+                    .create(APIService.class)
+                    .login(email, password)
+                    .enqueue(new Callback<LoginResponse>() {
+                        @Override
+                        public void onResponse(@NonNull Call<com.belac.ines.foodie.api.models.LoginResponse> call,
+                                               @NonNull Response<com.belac.ines.foodie.api.models.LoginResponse> response) {
+                            hideProgressDialog();
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
+                            if (!response.body().getError()) {
 
-            //this method will be running on UI thread
-            pdLoading.setMessage("\tLoading...");
-            pdLoading.setCancelable(false);
-            pdLoading.show();
-        }
+                                LoginResponse.Results loginResponse = response.body().getResults();
 
-        @Override
-        protected String doInBackground(String... params) {
-            try {
-                url = new URL(AppConfig.URL_LOGIN);
+                                String id;
+                                if (Integer.valueOf(response.body().getResults().getType()) == 1) {
+                                    id = String.valueOf(loginResponse.getIdUser());
+                                } else {
+                                    id = String.valueOf(loginResponse.getIdRestaurant());
+                                }
 
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-                return "exception";
-            }
-            try {
-                    // Setup HttpURLConnection class
-                    conn = (HttpURLConnection) url.openConnection();
-                    conn.setReadTimeout(READ_TIMEOUT);
-                    conn.setConnectTimeout(CONNECTION_TIMEOUT);
-                    conn.setRequestMethod("POST");
+                            Intent intent = new Intent(Login.this, MainActivity.class);
+                            startActivity(intent);
+                            finish();
 
-                    // setDoInput and setDoOutput method depict handling of both send and receive
-                    conn.setDoInput(true);
-                    conn.setDoOutput(true);
+                            }else{
+                                Toast.makeText(Login.this, "OOPs! Please check your email and password.", Toast.LENGTH_LONG).show();
+                            }
+                        }
 
-                    // Append parameters to URL
-                    Uri.Builder builder = new Uri.Builder()
-                            .appendQueryParameter("email", params[0])
-                            .appendQueryParameter("password", params[1]);
-                    String query = builder.build().getEncodedQuery();
-
-                    // Open connection for sending data
-                    OutputStream os = conn.getOutputStream();
-                    BufferedWriter writer = new BufferedWriter(
-                            new OutputStreamWriter(os, "UTF-8"));
-                    writer.write(query);
-                    writer.flush();
-                    writer.close();
-                    os.close();
-                    conn.connect();
-
-            } catch (IOException e1) {
-                e1.printStackTrace();
-                return "exception";
-            }
-
-            try {
-
-                int response_code = conn.getResponseCode();
-
-                // Check if successful connection made
-                if (response_code == HttpURLConnection.HTTP_OK) {
-
-                    // Read data sent from server
-                    InputStream input = conn.getInputStream();
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-                    StringBuilder result = new StringBuilder();
-                    String line;
-
-                    while ((line = reader.readLine()) != null) {
-                        result.append(line);
-                    }
-                    // Pass data to onPostExecute method
-                    return (result.toString());
-
-                } else { return ("unsuccessful"); }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                return "exception";
-            } finally {
-                conn.disconnect();
-            }
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-
-            try {
-                JSONObject jObj = new JSONObject(result);
-                boolean error = jObj.getBoolean("error");
-                if (!error) {
-                    String name = jObj.getString("name");
-                    String surname = jObj.getString("surname");
-                    String email = jObj.getString("email");
-
-                    session.setLogin(true); //create session
-                    db.addUser(name, surname, email);  // Insert row in users table
-
-                    Intent intent = new Intent(Login.this, MainActivity.class);
-                    startActivity(intent);
-                    Login.this.finish();
-
-                } else if (error) {
-                    String errorMsg = jObj.getString("error_msg");
-                    Toast.makeText(getApplicationContext(), errorMsg, Toast.LENGTH_LONG).show();
-
-                } else if (result.equalsIgnoreCase("exception") || result.equalsIgnoreCase("unsuccessful")) {
-                    Toast.makeText(Login.this, "OOPs! Something went wrong. Connection Problem.", Toast.LENGTH_LONG).show();
-
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                Toast.makeText(getApplicationContext(), "JSON problem: " + e.getMessage(), Toast.LENGTH_LONG).show();
-            }
-
-            pdLoading.dismiss();
-
+                        @Override
+                        public void onFailure(Call<LoginResponse> call, Throwable t) {
+                            hideProgressDialog();
+                            Toast.makeText(Login.this, "Something went wrong!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        } else {
+            Toast.makeText(Login.this, "OOPs! Please enter your email and password.", Toast.LENGTH_SHORT)
+                    .show();
         }
     }
 
@@ -200,5 +117,11 @@ public class Login extends AppCompatActivity {
         startActivity(intent);
         //Login.this.finish();
     }
-
+    private void showProgressDialog() {
+        progressDialog.setMessage("Loading...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+    }
+    private void hideProgressDialog() { progressDialog.hide(); }
 }
+
