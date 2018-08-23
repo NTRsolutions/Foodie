@@ -1,5 +1,7 @@
 package com.belac.ines.foodie.api;
 
+import java.util.List;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -14,5 +16,8 @@ public interface APIService {
             @Field("name") String name, @Field("surname") String surname, @Field("email") String email,
             @Field("telephone") String telephone, @Field("address") String address, @Field("restoran") String restoran,
             @Field("password") String password);
+
+    @POST("/foodie/Top3Restorants.php") @FormUrlEncoded Call<List<RestaurantResponse>> getTop3(
+            @Field("from") String from);
 
 }

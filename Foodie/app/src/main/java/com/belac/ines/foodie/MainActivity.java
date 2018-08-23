@@ -3,6 +3,7 @@ package com.belac.ines.foodie;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -22,8 +23,6 @@ import com.belac.ines.foodie.fragments.RestorantsFragment;
 import com.belac.ines.foodie.helper.SessionManager;
 import com.belac.ines.foodie.profile.ProfilKorisnikFragment;
 import com.belac.ines.foodie.profile.ProfileRestoranFragment;
-
-import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -88,7 +87,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
