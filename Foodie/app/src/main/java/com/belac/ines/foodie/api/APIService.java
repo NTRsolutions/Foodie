@@ -25,4 +25,7 @@ public interface APIService {
 
     @GET("/foodie/Menu.php") Call<MenuResponse> menu();
 
+    @POST("/foodie/RestaurantDetails.php") @FormUrlEncoded Call<RestaurantDetailsResponse> restaurantDetails(
+            @Field("restorantID") int restaurantId);
+
 }
