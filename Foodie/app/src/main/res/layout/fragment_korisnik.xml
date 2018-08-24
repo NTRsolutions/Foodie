@@ -1,4 +1,4 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -6,10 +6,15 @@
     tools:context="com.belac.ines.foodie.profile.ProfilKorisnikFragment">
 
     <RelativeLayout
-        android:id="@+id/profileData"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/activity_vertical_margin"
+        android:orientation="vertical"
+        android:paddingTop="32dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:id="@+id/header"
+        android:background="@color/colorPrimary"
+        android:paddingBottom="16dp"
         >
 
         <LinearLayout
@@ -44,23 +49,33 @@
                 android:id="@+id/userName"
                 android:text="Ime i prezime korisnika"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"/>
 
             <TextView
                 android:id="@+id/userAddress"
                 android:text="Adresa korisnika"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/userName"/>
+                android:layout_below="@id/userName"
+                android:textColor="@android:color/white"/>
 
             <TextView
                 android:id="@+id/userTelephone"
                 android:text="Telefon korisnika"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/userAddress" />
+                android:layout_below="@+id/userAddress"
+                android:textColor="@android:color/white"/>
+
+            <TextView
+                android:id="@+id/userEmail"
+                android:text="Email korisnika"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"/>
 
 
         </LinearLayout>
     </RelativeLayout>
-</FrameLayout>
+</LinearLayout>

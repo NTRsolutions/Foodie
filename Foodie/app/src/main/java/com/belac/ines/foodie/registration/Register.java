@@ -7,18 +7,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.belac.ines.foodie.R;
 import com.belac.ines.foodie.helper.PagerAdapter;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class Register extends AppCompatActivity {
+
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.tab_layout) TabLayout tabLayout;
+    @BindView(R.id.pager) ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        ButterKnife.bind(this);
         setSupportActionBar(toolbar);
 
         if (getSupportActionBar() != null){
@@ -26,14 +33,13 @@ public class Register extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText("USER"));
         tabLayout.addTab(tabLayout.newTab().setText("RESTORAN"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+       // final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
         final PagerAdapter pagerAdapter = new PagerAdapter(
-                getSupportFragmentManager(), tabLayout.getTabCount(), "registration");
+                getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(pagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

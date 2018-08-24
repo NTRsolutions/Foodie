@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,8 +17,9 @@ import android.widget.Toast;
 import com.belac.ines.foodie.Login;
 import com.belac.ines.foodie.MainActivity;
 import com.belac.ines.foodie.R;
-import com.belac.ines.foodie.app.AppConfig;
-import com.belac.ines.foodie.helper.SessionManager;
+import com.belac.ines.foodie.api.APIService;
+import com.belac.ines.foodie.api.AppConfig;
+import com.belac.ines.foodie.api.RetrofitClient;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,47 +35,37 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 /**
  * Created by Ines on 13.11.2017..
  */
 
 public class RestoranFragment extends Fragment{
 
-    private EditText etName;
-    private EditText etSurname;
-    private EditText etEmail;
-    private EditText etTelephone;
-    private EditText etLocation;
-    private EditText etPassword;
-    private EditText etRestoran;
-    private Button btRegister;
+    @BindView(R.id.etName) EditText etName;
+    @BindView(R.id.etSurname) EditText etSurname;
+    @BindView(R.id.etEmail) EditText etEmail;
+    @BindView(R.id.etTelephone) EditText etTelephone;
+    @BindView(R.id.etLocation) EditText etLocation;
+    @BindView(R.id.etPassword) EditText etPassword;
+    @BindView(R.id.etRestoran) EditText etRestoran;
+    @BindView(R.id.btnRegister) Button btRegister;
 
-    private SessionManager session;
-    public static final int CONNECTION_TIMEOUT=10000;
-    public static final int READ_TIMEOUT=15000;
+    ProgressDialog progressDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_reg_restoran, container, false);
 
-        etName = (EditText) v.findViewById(R.id.etName);
-        etSurname = (EditText) v.findViewById(R.id.etSurname);
-        etEmail = (EditText) v.findViewById(R.id.etEmail);
-        etTelephone = (EditText) v.findViewById(R.id.etTelephone);
-        etLocation = (EditText) v.findViewById(R.id.etLocation);
-        etPassword = (EditText) v.findViewById(R.id.etPassword);
-        etRestoran = (EditText) v.findViewById(R.id.etRestoran);
-        btRegister = (Button) v.findViewById(R.id.btnRegister);
+        ButterKnife.bind(this,v);
+        progressDialog = new ProgressDialog(getActivity());
 
-        session = new SessionManager(getActivity());
-
-        // Check if user is already logged in or not
-        if (session.isLoggedIn()) {
-            // User is already logged in. Take him to main activity
-            Intent intent = new Intent(getActivity(), MainActivity.class);
-            getActivity().startActivity(intent);
-            getActivity().finish();
-        }
 
         btRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,135 +79,37 @@ public class RestoranFragment extends Fragment{
                 final String password = etPassword.getText().toString().trim();
 
                 if(!email.isEmpty() && !password.isEmpty() && !name.isEmpty() && !surname.isEmpty() ) {
+
                     //registracija
-                    new RestoranFragment.AsyncRegister().execute(name, surname, email, telephone, location, restoran , password);
-                }else{
+                    progressDialog.setMessage("Loading...");
+                    progressDialog.setCancelable(false);
+                    progressDialog.show();
+
+                    RetrofitClient.instance()
+                            .create(APIService.class)
+                            .register(name, surname, email, telephone, location, restoran, password)
+                            .enqueue(new Callback<ResponseBody>() {
+                                @Override public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                                    progressDialog.hide();
+                                    Intent intent = new Intent(getActivity(), Login.class);
+                                    startActivity(intent);
+                                    getActivity().finish();
+                                }
+
+                                @Override
+                                public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                                    progressDialog.hide();
+                                    Toast.makeText(getActivity(), "OOPs! Something went wrong. Connection Problem.",
+                                            Toast.LENGTH_LONG).show();
+                                }
+                            });
+                }else {
                     Toast.makeText(getActivity(), "OOPs! Please enter all informations.", Toast.LENGTH_LONG).show();
                 }
             }
         });
 
         return v;
-    }
-
-    private class AsyncRegister extends AsyncTask<String, String, String> {
-        ProgressDialog pdLoading = new ProgressDialog(getActivity());
-        HttpURLConnection conn;
-        URL url = null;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            //this method will be running on UI thread
-            pdLoading.setMessage("\tLoading...");
-            pdLoading.setCancelable(false);
-            pdLoading.show();
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-
-            try {
-                url = new URL(AppConfig.URL_REGISTER);
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-                return "exception";
-            }
-            try {
-                // Setup HttpURLConnection class
-                conn = (HttpURLConnection) url.openConnection();
-                conn.setReadTimeout(READ_TIMEOUT);
-                conn.setConnectTimeout(CONNECTION_TIMEOUT);
-                conn.setRequestMethod("POST");
-
-                // setDoInput and setDoOutput method depict handling of both send and receive
-                conn.setDoInput(true);
-                conn.setDoOutput(true);
-
-                // Append parameters to URL
-                Uri.Builder builder = new Uri.Builder()
-                        .appendQueryParameter("name", params[0])
-                        .appendQueryParameter("surname", params[1])
-                        .appendQueryParameter("email", params[2])
-                        .appendQueryParameter("telephone", params[3])
-                        .appendQueryParameter("address", params[4])
-                        .appendQueryParameter("restoran", params[5])
-                        .appendQueryParameter("password", params[6]);
-                String query = builder.build().getEncodedQuery();
-
-                // Open connection for sending data
-                OutputStream os = conn.getOutputStream();
-                BufferedWriter writer = new BufferedWriter(
-                        new OutputStreamWriter(os, "UTF-8"));
-                writer.write(query);
-                writer.flush();
-                writer.close();
-                os.close();
-                conn.connect();
-
-            }catch (IOException e1) {
-                e1.printStackTrace();
-                return "exception";
-            }
-            try {
-
-                int response_code = conn.getResponseCode();
-
-                // Check if successful connection made
-                if (response_code == HttpURLConnection.HTTP_OK) {
-
-                    // Read data sent from server
-                    InputStream input = conn.getInputStream();
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-                    StringBuilder result = new StringBuilder();
-                    String line;
-
-                    while ((line = reader.readLine()) != null) {
-                        result.append(line);
-                    }
-                    // Pass data to onPostExecute method
-                    return (result.toString());
-
-                } else { return ("unsuccessful"); }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                return "exception";
-            } finally {
-                conn.disconnect();
-            }
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            try {
-                JSONObject jObj = new JSONObject(result);
-                boolean error = jObj.getBoolean("error");
-                if (!error) {
-                    Intent intent = new Intent(getActivity(), Login.class);
-                    startActivity(intent);
-                    getActivity().finish();
-
-                } else if (error) {
-                    String errorMsg = jObj.getString("error_msg");
-                    Toast.makeText(getActivity(), errorMsg, Toast.LENGTH_LONG).show();
-
-                } else if (result.equalsIgnoreCase("exception") || result.equalsIgnoreCase("unsuccessful")) {
-                    Toast.makeText(getActivity(), "OOPs! Something went wrong. Connection Problem.", Toast.LENGTH_LONG).show();
-
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                Toast.makeText(getActivity(), "JSON problem: " + e.getMessage(), Toast.LENGTH_LONG).show();
-            }
-
-            pdLoading.dismiss();
-        }
-    
-
-
     }
 
 }

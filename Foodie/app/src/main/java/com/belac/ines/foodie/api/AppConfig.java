@@ -1,4 +1,4 @@
-package com.belac.ines.foodie.app;
+package com.belac.ines.foodie.api;
 
 /**
  * Created by Ines on 9.11.2017..
@@ -6,7 +6,7 @@ package com.belac.ines.foodie.app;
 
 public class AppConfig {
 
-    public static String URL_LOGIN = "https://glaikit-bather.000webhostapp.com/foodie/Login.php";
+    public static String URL_LOGIN = "https://glaikit-bather.000webhostapp.com/foodie/LoginActivity.php";
     public static String URL_REGISTER = "https://glaikit-bather.000webhostapp.com/foodie/Register.php";
     public static String URL_RESTORANTS = "https://glaikit-bather.000webhostapp.com/foodie/AllRestorants.php";
     public static String URL_WISHLIST = "https://glaikit-bather.000webhostapp.com/foodie/Wishlist.php";

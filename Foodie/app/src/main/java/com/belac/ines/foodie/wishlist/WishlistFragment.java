@@ -53,7 +53,7 @@ public class WishlistFragment extends Fragment{
 
             final ViewPager viewPager = (ViewPager) view.findViewById(R.id.pager);
             final PagerAdapter pagerAdapter = new PagerAdapter(
-                    getFragmentManager(), tabLayout.getTabCount(), "wishlist");
+                    getFragmentManager(), tabLayout.getTabCount());
             viewPager.setAdapter(pagerAdapter);
             viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
             tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

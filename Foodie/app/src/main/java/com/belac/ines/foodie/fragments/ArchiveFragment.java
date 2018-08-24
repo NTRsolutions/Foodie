@@ -19,11 +19,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.belac.ines.foodie.R;
-import com.belac.ines.foodie.app.AppConfig;
+import com.belac.ines.foodie.api.AppConfig;
 import com.belac.ines.foodie.classes.Order;
 import com.belac.ines.foodie.helper.ArchiveAdapter;
-import com.belac.ines.foodie.helper.SQLiteHandler;
-import com.belac.ines.foodie.helper.SessionManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,7 +38,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -65,7 +62,7 @@ public class ArchiveFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_restorant, container, false);
+        View view = inflater.inflate(R.layout.fragment_lists, container, false);
         //pripremanje adaptera i recyclerView za prikaz narudzbi
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         orderAdapter = new ArchiveAdapter(orderList);
@@ -75,15 +72,6 @@ public class ArchiveFragment extends Fragment {
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
         recyclerView.setAdapter(orderAdapter);
 
-        //provjera sesije i dohvacanje ID ulogiranog korisnika
-        SessionManager session = new SessionManager(getActivity());
-        if(session.isLoggedIn()){
-            SQLiteHandler db = new SQLiteHandler(getActivity());
-            HashMap<String, String> user = db.getUserDetails();
-            new ArchiveFragment.AsyncOrders().execute(user.get("email"));
-        }else{
-            Toast.makeText(getActivity(), "User is not logged in", Toast.LENGTH_LONG);
-        }
 
         //search
         search = (EditText) view.findViewById(R.id.search);
