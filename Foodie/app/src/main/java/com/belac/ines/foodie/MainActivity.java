@@ -52,6 +52,8 @@ public class MainActivity extends AppCompatActivity
         name.setText(String.format("%s %s", SessionManager.getName(getApplicationContext()),
                 SessionManager.getSurname(getApplicationContext())));
 
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, new HomeFragment()).commit();
+
     }
 
     @Override

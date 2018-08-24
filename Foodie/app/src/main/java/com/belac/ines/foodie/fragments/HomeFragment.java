@@ -3,6 +3,7 @@ package com.belac.ines.foodie.fragments;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -42,7 +43,10 @@ import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+
+import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -83,7 +87,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, HomeAd
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
         mapFragment.getMapAsync(this);
-        getData("Pazin");
 
         return view;
     }
@@ -190,6 +193,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, HomeAd
             @Override public void onSuccess(Location location) {
 
                 if (location == null) {
+                    getData("Pazin");
                     CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(0,0));
                     CameraUpdate zoom = CameraUpdateFactory.zoomTo(2);
                     googleMap.moveCamera(center);
@@ -197,11 +201,21 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, HomeAd
 
                     return;
                 }
+
                 CameraUpdate center =
                         CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
+                try {
+                    Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+                    String place = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1).get(0).getLocality();
+                    getData(place);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
                 CameraUpdate zoom = CameraUpdateFactory.zoomTo(10);
                 googleMap.moveCamera(center);
                 googleMap.animateCamera(zoom);
+
             }
         });
     }
