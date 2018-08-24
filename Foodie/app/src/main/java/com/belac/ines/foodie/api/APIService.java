@@ -23,4 +23,6 @@ public interface APIService {
 
     @GET("/foodie/AllRestorants.php") Call<AllRestaurantsResponse> restaurants();
 
+    @GET("/foodie/Menu.php") Call<MenuResponse> menu();
+
 }

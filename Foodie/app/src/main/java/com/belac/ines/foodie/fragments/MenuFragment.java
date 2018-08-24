@@ -1,175 +1,109 @@
 package com.belac.ines.foodie.fragments;
 
-import android.app.ProgressDialog;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.belac.ines.foodie.R;
-import com.belac.ines.foodie.api.AppConfig;
-import com.belac.ines.foodie.classes.Menu;
-import com.belac.ines.foodie.classes.Restoran;
+import com.belac.ines.foodie.api.APIService;
+import com.belac.ines.foodie.api.MenuResponse;
+import com.belac.ines.foodie.api.RetrofitClient;
 import com.belac.ines.foodie.helper.MenuAdapter;
+import com.belac.ines.foodie.profile.ProfileRestoranFragment;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MenuFragment extends Fragment {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnTextChanged;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-    public static final int CONNECTION_TIMEOUT=10000;
-    public static final int READ_TIMEOUT=15000;
+public class MenuFragment extends Fragment implements MenuAdapter.MenuListener {
 
-    private List<Restoran> menuList = new ArrayList<>();
-    private RecyclerView recyclerView;
+    @BindView(R.id.recycler_view) RecyclerView recyclerView;
+    @BindView(R.id.progress_bar)  ProgressBar progressBar;
+    @BindView(R.id.root)
+    LinearLayout root;
+
+    private List<MenuResponse.Result> menuList = new ArrayList<>();
     private MenuAdapter menuAdapter;
-    private EditText search;
 
     public MenuFragment() {}
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState); }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_all_restaurants, container, false);
-        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-        menuAdapter = new MenuAdapter(menuList, getContext());
+        View view = inflater.inflate(R.layout.fragment_lists, container, false);
+
+        ButterKnife.bind(this, view);
+
+        menuAdapter = new MenuAdapter(menuList, getContext(), this);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
         recyclerView.setAdapter(menuAdapter);
 
-        new MenuFragment.AsyncMenus().execute();
+        progressBar.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.GONE);
 
-        search = (EditText) view.findViewById(R.id.search);
-        search.addTextChangedListener(new TextWatcher() {
+        RetrofitClient.instance().create(APIService.class).menu().enqueue(new Callback<MenuResponse>() {
             @Override
-            public void beforeTextChanged(CharSequence query, int i, int i1, int i2) {}
+            public void onResponse(@NonNull Call<MenuResponse> call, @NonNull Response<MenuResponse> response) {
+                progressBar.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
 
-            @Override
-            public void onTextChanged(CharSequence query, int i, int i1, int i2) {
-                menuAdapter.getFilter().filter(query);
+                if (!response.body().getError()) {
+
+                    menuList.clear();
+                    menuList.addAll(response.body().getResults());
+                    menuAdapter.notifyDataSetChanged();
+                } else {
+                    Toast.makeText(getContext(), "Something went wrong!", Toast.LENGTH_SHORT).show();
+                }
             }
 
-            @Override
-            public void afterTextChanged(Editable query) {}
+            @Override public void onFailure(@NonNull Call<MenuResponse> call, @NonNull Throwable t) {
+                progressBar.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
+                Toast.makeText(getContext(), "Something went wrong!", Toast.LENGTH_SHORT).show();
+            }
         });
+
         return view;
     }
 
-    private class AsyncMenus extends AsyncTask<String, String, String> {
-        ProgressDialog pdLoading = new ProgressDialog(getActivity());
-        HttpURLConnection conn;
-        URL url = null;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pdLoading.setMessage("\tLoading...");
-            pdLoading.setCancelable(false);
-            pdLoading.show();
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-            try {
-                url = new URL(AppConfig.URL_MENU);
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-                return "exception";
-            }
-            try {
-                // Setup HttpURLConnection class
-                conn = (HttpURLConnection) url.openConnection();
-                conn.setReadTimeout(READ_TIMEOUT);
-                conn.setConnectTimeout(CONNECTION_TIMEOUT);
-                conn.setRequestMethod("GET");
-                conn.setDoInput(true);
-
-            } catch (IOException e1) {
-                e1.printStackTrace();
-                return "exception";
-            }
-            try {
-                int response_code = conn.getResponseCode();
-                if (response_code == HttpURLConnection.HTTP_OK) {
-                    // Read data sent from server
-                    InputStream input = conn.getInputStream();
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-                    StringBuilder result = new StringBuilder();
-                    String line;
-
-                    while ((line = reader.readLine()) != null) {
-                        result.append(line);
-                    }
-                    // Pass data to onPostExecute method
-                    return (result.toString());
-
-                } else { return ("unsuccessful"); }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                return "exception";
-            } finally {
-                conn.disconnect();
-            }
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-
-            try {
-                JSONObject jObj = new JSONObject(result);
-                boolean error = jObj.getBoolean("error");
-                if (!error) {
-                    JSONArray json = jObj.getJSONArray("results");
-                    int i;
-                    for(i=0; i < json.length(); i++) {
-
-                        JSONObject jObject = json.getJSONObject(i);
-                        Menu meni = new Menu(jObject.getString("first"), jObject.getString("second"), jObject.getString("third"));
-                        Restoran res = new Restoran(jObject.getInt("id"), jObject.getString("name"), meni);
-                        menuList.add(res);
-                    }
-                    menuAdapter.notifyDataSetChanged();
-                } else if (error) {
-                    Toast.makeText(getActivity(), "Error", Toast.LENGTH_LONG).show();
-
-                } else if (result.equalsIgnoreCase("exception") || result.equalsIgnoreCase("unsuccessful")) {
-                    Toast.makeText(getActivity(), "OOPs! Something went wrong. Connection Problem.", Toast.LENGTH_LONG).show();
-
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                Toast.makeText(getActivity(), "JSON problem: " + e.getMessage(), Toast.LENGTH_LONG).show();
-            }
-            pdLoading.dismiss();
-        }
+    @OnTextChanged(R.id.search) void onTextChange(CharSequence query) {
+        menuAdapter.getFilter().filter(query);
     }
+
+    @Override
+    public void onClickMenu(MenuResponse.Result item) {
+        Fragment fragment = new ProfileRestoranFragment();
+        Bundle args = new Bundle();
+        args.putInt("id", Integer.valueOf(item.getId()));
+        fragment.setArguments(args);
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
+    }
+
 }

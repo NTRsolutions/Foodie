@@ -1,17 +1,14 @@
 package com.belac.ines.foodie.wishlist;
 
 import android.app.ProgressDialog;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -25,7 +22,6 @@ import com.belac.ines.foodie.R;
 import com.belac.ines.foodie.api.AppConfig;
 import com.belac.ines.foodie.classes.Restoran;
 import com.belac.ines.foodie.helper.WishlistAdapter;
-import com.belac.ines.foodie.helper.WishlistTouchHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,7 +40,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WishlistRestoranFragment extends Fragment implements WishlistTouchHelper.WishlistTouchHelperListener {
+public class WishlistRestoranFragment extends Fragment {
     public static final int CONNECTION_TIMEOUT=10000;
     public static final int READ_TIMEOUT=15000;
 
@@ -65,7 +61,7 @@ public class WishlistRestoranFragment extends Fragment implements WishlistTouchH
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_all_restaurants, container, false);
+        View view = inflater.inflate(R.layout.fragment_lists, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         frameLayout = (FrameLayout) view.findViewById(R.id.frame_layout);
         wAdapter = new WishlistAdapter(restoranList, getContext());
@@ -74,9 +70,6 @@ public class WishlistRestoranFragment extends Fragment implements WishlistTouchH
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
         recyclerView.setAdapter(wAdapter);
-
-        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new WishlistTouchHelper(0, ItemTouchHelper.LEFT, this, false);
-        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
 
         search = (EditText) view.findViewById(R.id.search);
         search.addTextChangedListener(new TextWatcher() {
@@ -93,49 +86,6 @@ public class WishlistRestoranFragment extends Fragment implements WishlistTouchH
         });
         return view;
     }
-
-    @Override
-    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
-        if (viewHolder instanceof WishlistAdapter.MyViewHolder) {
-            // get the removed item name to display it in snack bar
-            String name = restoranList.get(viewHolder.getAdapterPosition()).getName();
-            int id = restoranList.get(viewHolder.getAdapterPosition()).getID();
-
-            // backup of removed item for undo purpose
-            final Restoran deletedItem = restoranList.get(viewHolder.getAdapterPosition());
-            final int deletedIndex = viewHolder.getAdapterPosition();
-
-            // remove the item from recycler view
-            wAdapter.removeItem(viewHolder.getAdapterPosition());
-            boolean ups = new DeleteItem(userEmail, id).isError();
-            //TODO osvjezit prikaz
-
-            // showing snack bar with Undo option
-            Snackbar snackbar;
-            if(!ups){
-                snackbar = Snackbar
-                        .make(frameLayout, name + " removed from wishlist!", Snackbar.LENGTH_LONG)
-                        .setDuration(5000);
-                snackbar.setAction("UNDO", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                        // undo is selected, restore the deleted item
-                        wAdapter.restoreItem(deletedItem, deletedIndex);
-                    }
-                });
-                snackbar.setActionTextColor(Color.YELLOW);
-                snackbar.show();
-            }else{
-                snackbar = Snackbar
-                        .make(frameLayout, "Mistake: " + name + " hasn't been removed!", Snackbar.LENGTH_LONG)
-                        .setDuration(5000);
-            }
-            snackbar.setActionTextColor(Color.YELLOW);
-            snackbar.show();
-        }
-    }
-
 
     private class AsyncWishlist extends AsyncTask<String, String, String> {
         ProgressDialog pdLoading = new ProgressDialog(getActivity());
