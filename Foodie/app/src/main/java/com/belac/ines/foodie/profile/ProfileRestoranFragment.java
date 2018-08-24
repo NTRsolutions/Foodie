@@ -1,22 +1,39 @@
 package com.belac.ines.foodie.profile;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.belac.ines.foodie.R;
+import com.belac.ines.foodie.api.APIService;
 import com.belac.ines.foodie.api.AppConfig;
+import com.belac.ines.foodie.api.RestaurantDetailsResponse;
+import com.belac.ines.foodie.api.RestaurantMenusResponse;
+import com.belac.ines.foodie.api.RetrofitClient;
+import com.belac.ines.foodie.fragments.NewMenuFragment;
 import com.belac.ines.foodie.helper.SQLiteHandler;
+import com.belac.ines.foodie.helper.SessionManager;
 import com.belac.ines.foodie.wishlist.DeleteItem;
 
 import org.json.JSONArray;
@@ -35,183 +52,118 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 
-public class ProfileRestoranFragment extends Fragment implements View.OnClickListener {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-    public static final int CONNECTION_TIMEOUT=10000;
-    public static final int READ_TIMEOUT=15000;
+public class ProfileRestoranFragment extends Fragment implements ProfileRestoranAdapter.RestaurantProfileAdapterListener {
 
-    private TextView name, address, city, telephone, firstMeal, secondMeal, dessert;
-    int restoranID;
-    private Switch wishlist;
-    private String userEmail;
-    private Button btnOrder;
-    public String action;
+    private static final String TAG = ProfileFragment.class.getSimpleName();
+
+    @BindView(R.id.name) TextView name;
+    @BindView(R.id.telephone) TextView telephone;
+    @BindView(R.id.location) TextView location;
+    @BindView(R.id.recycler_view)
+    RecyclerView recyclerView;
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
+    @BindView(R.id.root)
+    RelativeLayout root;
 
     public ProfileRestoranFragment() {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState); }
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_restauran_profile, container, false);
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        ButterKnife.bind(this, view);
 
-        name = (TextView) view.findViewById(R.id.restoranName);
-        address = (TextView) view.findViewById(R.id.restoranAddress);
-        telephone = (TextView) view.findViewById(R.id.restoranTelephone);
-        firstMeal = (TextView) view.findViewById(R.id.restoranFirstMeal);
-        secondMeal = (TextView) view.findViewById(R.id.restoranSecondMeal);
-        dessert = (TextView) view.findViewById(R.id.restoranDessert);
-        wishlist = (Switch) view.findViewById(R.id.switchWishlist);
-        btnOrder = (Button) view.findViewById(R.id.btnOrder);
+        initRecyclerView();
 
+        RetrofitClient.instance()
+                .create(APIService.class)
+                .restaurantDetails(Integer.valueOf(SessionManager.getId(getContext())))
+                .enqueue(new Callback<RestaurantDetailsResponse>() {
+                    @Override public void onResponse(@NonNull Call<RestaurantDetailsResponse> call,
+                                                     @NonNull Response<RestaurantDetailsResponse> response) {
 
-            SQLiteHandler db = new SQLiteHandler(getActivity());
-            HashMap<String, String> user = db.getUserDetails();
-            userEmail = user.get("email");
-            Bundle args = getArguments();
-            int index = args.getInt("id", 0);
-            restoranID = index;
-            action = "getData";
-            new AsyncProfil().execute(AppConfig.URL_PROFIL, "get");
+                        name.setText(response.body().getResults().get(0).getName());
+                        location.setText(
+                                String.format("Location: %s", response.body().getResults().get(0).getLocation()));
+                        telephone.setText(
+                                String.format("Telephone: %s", response.body().getResults().get(0).getTelephone()));
+                    }
 
+                    @Override
+                    public void onFailure(@NonNull Call<RestaurantDetailsResponse> call, @NonNull Throwable t) {
+                        Log.e(TAG, t.getLocalizedMessage());
+                    }
+                });
 
-        wishlist.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b){
-                    action = "insert";
-                    new AsyncProfil().execute(AppConfig.URL_WISHLIST, "add");
-                }else {
-                    boolean error = new DeleteItem(userEmail, 10).isError();
-                }
-            }
-        });
+        progressBar.setVisibility(View.VISIBLE);
+        RetrofitClient.instance()
+                .create(APIService.class)
+                .restaurantMenus(Integer.valueOf(SessionManager.getId(getContext())))
+                .enqueue(new Callback<RestaurantMenusResponse>() {
+                    @Override
+                    public void onResponse(@NonNull Call<RestaurantMenusResponse> call, @NonNull Response<RestaurantMenusResponse> response) {
+                        progressBar.setVisibility(View.GONE);
 
-        btnOrder.setOnClickListener(this);
+                        initAdapter(response);
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<RestaurantMenusResponse> call, @NonNull Throwable t) {
+
+                    }
+                });
 
         return view;
     }
 
-    @Override
-    public void onClick(View view) {
-        action = "insert";
-        new AsyncProfil().execute(AppConfig.URL_ORDER, "add");
+    private void initAdapter(@NonNull Response<RestaurantMenusResponse> response) {
+        recyclerView.setAdapter(new ProfileRestoranAdapter(response.body().getResults(), getContext(), this));
     }
 
-    private class AsyncProfil extends AsyncTask<String, String, String> {
-        ProgressDialog pdLoading = new ProgressDialog(getActivity());
-        HttpURLConnection conn;
-        URL url = null;
+    private void initRecyclerView() {
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
+    }
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pdLoading.setMessage("\tLoading...");
-            pdLoading.setCancelable(false);
-            pdLoading.show();
-        }
+    @OnClick(R.id.add_new_menu) void onClickAddNewMenu() {
+        Fragment fragment = new NewMenuFragment();
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
+    }
 
-        @Override
-        protected String doInBackground(String... params) {
-            try {
-                url = new URL(params[0]);
+    @Override public void onClickDelete(final RestaurantMenusResponse.Result item) {
 
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-                return "exception";
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage("Do you want delete menu?").setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override public void onClick(DialogInterface dialog, int which) {
+                RetrofitClient.instance()
+                        .create(APIService.class)
+                        .deleteMenu(Integer.valueOf(item.getId()))
+                        .enqueue(new Callback<ResponseBody>() {
+                            @Override public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                ((ProfileRestoranAdapter) recyclerView.getAdapter()).removeItem(item);
+                            }
+
+                            @Override public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                Toast.makeText(getContext(), t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
             }
-            try {
-                // Setup HttpURLConnection class
-                conn = (HttpURLConnection) url.openConnection();
-                conn.setReadTimeout(READ_TIMEOUT);
-                conn.setConnectTimeout(CONNECTION_TIMEOUT);
-                conn.setRequestMethod("POST");
-                conn.setDoInput(true);
-                conn.setDoOutput(true);
-
-                // Append parameters to URL
-                Uri.Builder builder = new Uri.Builder()
-                        .appendQueryParameter("user", userEmail)
-                        .appendQueryParameter("restoran", Integer.toString(restoranID))
-                        .appendQueryParameter("action", params[1]);
-                String query = builder.build().getEncodedQuery();
-
-                // Open connection for sending data
-                OutputStream os = conn.getOutputStream();
-                BufferedWriter writer = new BufferedWriter(
-                        new OutputStreamWriter(os, "UTF-8"));
-                writer.write(query);
-                writer.flush();
-                writer.close();
-                os.close();
-                conn.connect();
-
-            } catch (IOException e1) {
-                e1.printStackTrace();
-                return "exception";
+        }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
             }
-            try {
-                int response_code = conn.getResponseCode();
-                if (response_code == HttpURLConnection.HTTP_OK) {
-                    // Read data sent from server
-                    InputStream input = conn.getInputStream();
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-                    StringBuilder result = new StringBuilder();
-                    String line;
-
-                    while ((line = reader.readLine()) != null) {
-                        result.append(line);
-                    }
-                    // Pass data to onPostExecute method
-                    return (result.toString());
-
-                } else { return ("unsuccessful"); }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                return "exception";
-            } finally {
-                conn.disconnect();
-            }
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-
-            try {
-                JSONObject jObj = new JSONObject(result);
-                boolean error = jObj.getBoolean("error");
-                if (!error) {
-                    if(action.equals("getData")){
-                        JSONArray json = jObj.getJSONArray("results");
-                        int i;
-                        for(i=0; i < json.length(); i++) {
-
-                            JSONObject jObject = json.getJSONObject(i);
-                            name.setText(jObject.getString("name"));
-                            address.setText(jObject.getString("address"));
-                            telephone.setText(jObject.getString("telephone"));
-                            firstMeal.setText(jObject.getString("first"));
-                            secondMeal.setText(jObject.getString("second"));
-                            dessert.setText(jObject.getString("third"));
-                            wishlist.setChecked(Boolean.parseBoolean(jObject.getString("wishlist")));
-                        }
-                    }
-                } else if (error) {
-                    Toast.makeText(getActivity(), jObj.getString("error_msg"), Toast.LENGTH_LONG).show();
-                } else if (result.equalsIgnoreCase("exception") || result.equalsIgnoreCase("unsuccessful")) {
-                    Toast.makeText(getActivity(), "OOPs! Something went wrong. Connection Problem.", Toast.LENGTH_LONG).show();
-
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                Toast.makeText(getActivity(), "JSON problem: " + e.getMessage(), Toast.LENGTH_LONG).show();
-            }
-            pdLoading.dismiss();
-        }
-        }
-
+        }).show();
+    }
 }
