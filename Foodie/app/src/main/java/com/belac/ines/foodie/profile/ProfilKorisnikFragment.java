@@ -8,6 +8,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.belac.ines.foodie.R;
+import com.belac.ines.foodie.helper.SessionManager;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by Ines on 21.1.2018..
@@ -15,10 +19,12 @@ import com.belac.ines.foodie.R;
 
 public class ProfilKorisnikFragment extends Fragment {
 
-    public static final int CONNECTION_TIMEOUT=10000;
-    public static final int READ_TIMEOUT=15000;
+    private static final String TAG = ProfilKorisnikFragment.class.getSimpleName();
 
-    private TextView name, address, city, telephone, firstMeal, secondMeal, dessert;
+    @BindView(R.id.userName) TextView name;
+    @BindView(R.id.userAddress) TextView address;
+    @BindView(R.id.userEmail) TextView email;
+    @BindView(R.id.userTelephone) TextView telephone;
 
     public ProfilKorisnikFragment() {
     }
@@ -31,9 +37,13 @@ public class ProfilKorisnikFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_korisnik, container, false);
 
-        name = (TextView) view.findViewById(R.id.userName);
-        address = (TextView) view.findViewById(R.id.userAddress);
-        telephone = (TextView) view.findViewById(R.id.userTelephone);
+        ButterKnife.bind(this, view);
+
+        name.setText(
+                String.format("%s %s", SessionManager.getName(getContext()), SessionManager.getSurname(getContext())));
+        email.setText(String.format("Email: %s", SessionManager.getEmail(getContext())));
+        address.setText(String.format("Address: %s", SessionManager.getAddress(getContext())));
+        telephone.setText(String.format("Telephone: %s", SessionManager.getTelephone(getContext())));
 
 
         return view;
