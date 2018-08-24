@@ -11,15 +11,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.belac.ines.foodie.R;
 import com.belac.ines.foodie.api.APIService;
-import com.belac.ines.foodie.api.MenuResponse;
+import com.belac.ines.foodie.api.AllRestaurantsResponse;
 import com.belac.ines.foodie.api.RetrofitClient;
-import com.belac.ines.foodie.helper.MenuAdapter;
+import com.belac.ines.foodie.helper.AllRestaurantsAdapter;
 import com.belac.ines.foodie.profile.ProfileRestoranFragment;
 
 import java.util.ArrayList;
@@ -32,17 +31,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MenuFragment extends Fragment implements MenuAdapter.MenuListener {
+public class AllRestaurantsFragment extends Fragment implements AllRestaurantsAdapter.RestaurantsListener {
 
     @BindView(R.id.recycler_view) RecyclerView recyclerView;
-    @BindView(R.id.progress_bar)  ProgressBar progressBar;
-    @BindView(R.id.root)
-    LinearLayout root;
+    @BindView(R.id.progress_bar) ProgressBar progressBar;
 
-    private List<MenuResponse.Result> menuList = new ArrayList<>();
-    private MenuAdapter menuAdapter;
+    private List<AllRestaurantsResponse.Result> restaurantList = new ArrayList<>();
+    private AllRestaurantsAdapter restaurantsAdapter;
 
-    public MenuFragment() {}
+    public AllRestaurantsFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,48 +53,51 @@ public class MenuFragment extends Fragment implements MenuAdapter.MenuListener {
 
         ButterKnife.bind(this, view);
 
-        menuAdapter = new MenuAdapter(menuList, getContext(), this);
+        restaurantsAdapter = new AllRestaurantsAdapter(restaurantList, getContext(), this);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
-        recyclerView.setAdapter(menuAdapter);
+        recyclerView.setAdapter(restaurantsAdapter);
 
         progressBar.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);
 
-        RetrofitClient.instance().create(APIService.class).menu().enqueue(new Callback<MenuResponse>() {
-            @Override
-            public void onResponse(@NonNull Call<MenuResponse> call, @NonNull Response<MenuResponse> response) {
-                progressBar.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.VISIBLE);
+        RetrofitClient.instance()
+                .create(APIService.class)
+                .restaurants()
+                .enqueue(new Callback<AllRestaurantsResponse>() {
+                    @Override
+                    public void onResponse(Call<AllRestaurantsResponse> call, Response<AllRestaurantsResponse> response) {
+                        progressBar.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
 
-                if (!response.body().getError()) {
+                        if (!response.body().getError()) {
+                            restaurantList.clear();
+                            restaurantList.addAll(response.body().getResults());
+                            restaurantsAdapter.notifyDataSetChanged();
+                        } else {
+                            Toast.makeText(getContext(), "Something went wrong!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
 
-                    menuList.clear();
-                    menuList.addAll(response.body().getResults());
-                    menuAdapter.notifyDataSetChanged();
-                } else {
-                    Toast.makeText(getContext(), "Something went wrong!", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override public void onFailure(@NonNull Call<MenuResponse> call, @NonNull Throwable t) {
-                progressBar.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.VISIBLE);
-                Toast.makeText(getContext(), "Something went wrong!", Toast.LENGTH_SHORT).show();
-            }
+                    @Override
+                    public void onFailure(Call<AllRestaurantsResponse> call, Throwable t) {
+                        progressBar.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                        Toast.makeText(getContext(), "Something went wrong!", Toast.LENGTH_SHORT).show();
+                    }
         });
 
         return view;
     }
 
     @OnTextChanged(R.id.search) void onTextChange(CharSequence query) {
-        menuAdapter.getFilter().filter(query);
+        restaurantsAdapter.getFilter().filter(query);
     }
 
     @Override
-    public void onClickMenu(MenuResponse.Result item) {
+    public void onClickRestaurant(AllRestaurantsResponse.Result item) {
         Fragment fragment = new ProfileRestoranFragment();
         Bundle args = new Bundle();
         args.putInt("id", Integer.valueOf(item.getId()));
@@ -105,5 +105,4 @@ public class MenuFragment extends Fragment implements MenuAdapter.MenuListener {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
     }
-
 }

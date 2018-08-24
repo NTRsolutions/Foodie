@@ -16,18 +16,15 @@ import com.belac.ines.foodie.registration.UserFragment;
 public class PagerAdapter extends FragmentStatePagerAdapter{
 
     int numPages;
-    String action;
 
-    public PagerAdapter(FragmentManager fm, int numPages, String action) {
+    public PagerAdapter(FragmentManager fm, int numPages) {
         super(fm);
         this.numPages = numPages;
-        this.action = action;
     }
 
     @Override
     public Fragment getItem(int position) {
 
-        if(action.equalsIgnoreCase("registration")){
             switch (position){
                 case 0:
                     UserFragment tab1 = new UserFragment();
@@ -38,19 +35,7 @@ public class PagerAdapter extends FragmentStatePagerAdapter{
                 default:
                     return null;
             }
-        }else if(action.equalsIgnoreCase("wishlist")){
-            switch (position){
-                case 0:
-                    WishlistRestoranFragment tab1 = new WishlistRestoranFragment();
-                    return tab1;
-                case 1:
-                    WishlistMenuFragment tab2 = new WishlistMenuFragment();
-                    return tab2;
-                default:
-                    return null;
-            }
-        }else{ return null; }
-    }
+        }
 
     @Override
     public int getCount() {

@@ -1,11 +1,9 @@
 package com.belac.ines.foodie.profile;
 
 import android.app.ProgressDialog;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,18 +15,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.belac.ines.foodie.R;
-import com.belac.ines.foodie.app.AppConfig;
-import com.belac.ines.foodie.classes.Menu;
-import com.belac.ines.foodie.classes.Restoran;
+import com.belac.ines.foodie.api.AppConfig;
 import com.belac.ines.foodie.helper.SQLiteHandler;
-import com.belac.ines.foodie.helper.SessionManager;
 import com.belac.ines.foodie.wishlist.DeleteItem;
-import com.belac.ines.foodie.wishlist.WishlistMenuFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -40,9 +33,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class ProfileRestoranFragment extends Fragment implements View.OnClickListener {
 
@@ -76,8 +67,7 @@ public class ProfileRestoranFragment extends Fragment implements View.OnClickLis
         wishlist = (Switch) view.findViewById(R.id.switchWishlist);
         btnOrder = (Button) view.findViewById(R.id.btnOrder);
 
-        SessionManager session = new SessionManager(getActivity());
-        if(session.isLoggedIn()){
+
             SQLiteHandler db = new SQLiteHandler(getActivity());
             HashMap<String, String> user = db.getUserDetails();
             userEmail = user.get("email");
@@ -86,9 +76,7 @@ public class ProfileRestoranFragment extends Fragment implements View.OnClickLis
             restoranID = index;
             action = "getData";
             new AsyncProfil().execute(AppConfig.URL_PROFIL, "get");
-        }else{
-            Toast.makeText(getActivity(), "User is not logged in", Toast.LENGTH_LONG);
-        }
+
 
         wishlist.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
