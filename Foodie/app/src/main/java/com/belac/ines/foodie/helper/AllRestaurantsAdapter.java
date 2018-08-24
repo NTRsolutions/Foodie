@@ -25,19 +25,22 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnTextChanged;
 
 /**
  * Created by Ines on 20.11.2017..
  */
 
-public class AllRestaurantsAdapter extends RecyclerView.Adapter<AllRestaurantsAdapter.MyViewHolder>{
+public class AllRestaurantsAdapter extends RecyclerView.Adapter<AllRestaurantsAdapter.MyViewHolder> implements Filterable{
 
     private List<AllRestaurantsResponse.Result> restoranList;
+    private List<AllRestaurantsResponse.Result> filteredList;
     private RestaurantsListener listener;
     Context context;
 
     public AllRestaurantsAdapter(List<AllRestaurantsResponse.Result> restoranList, Context context, RestaurantsListener listener) {
         this.restoranList = restoranList;
+        this.filteredList = restoranList;
         this.listener = listener;
         this.context = context;
 
@@ -56,7 +59,7 @@ public class AllRestaurantsAdapter extends RecyclerView.Adapter<AllRestaurantsAd
     }
 
     @NonNull @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public AllRestaurantsAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_row_restoran, parent, false);
         return new MyViewHolder(itemView);
@@ -64,18 +67,59 @@ public class AllRestaurantsAdapter extends RecyclerView.Adapter<AllRestaurantsAd
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        final AllRestaurantsResponse.Result restoran = restoranList.get(position);
+        final AllRestaurantsResponse.Result restoran = filteredList.get(position);
         holder.name.setText(restoran.getName());
         holder.address.setText(restoran.getAddress());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                listener.onClickRestaurant(restoran);
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return restoranList.size();
+        return filteredList.size();
     }
 
     public interface RestaurantsListener {
 
-        void onClickItem( AllRestaurantsResponse.Result item);
+        void onClickRestaurant( AllRestaurantsResponse.Result item);
     }
+
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override protected FilterResults performFiltering(CharSequence charSequence) {
+                String charString = charSequence.toString();
+                if (charString.isEmpty()) {
+                    filteredList = restoranList;
+                } else {
+                    List<AllRestaurantsResponse.Result> filter = new ArrayList<>();
+                    for (AllRestaurantsResponse.Result row : restoranList) {
+                        if (row.getName().toLowerCase().contains(charString.toLowerCase()) || row.getName()
+                                .toLowerCase()
+                                .contains(charString.toLowerCase()) || row.getAddress()
+                                .toLowerCase()
+                                .contains(charString.toLowerCase())) {
+                            filter.add(row);
+                        }
+                    }
+                    filteredList = filter;
+                }
+
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = filteredList;
+                return filterResults;
+            }
+
+            @Override protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                filteredList = (ArrayList<AllRestaurantsResponse.Result>) filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
+    }
+
 }
