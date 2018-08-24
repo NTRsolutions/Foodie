@@ -1,9 +1,14 @@
 package com.belac.ines.foodie.fragments;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,10 +25,18 @@ import com.belac.ines.foodie.api.APIService;
 import com.belac.ines.foodie.api.RestaurantResponse;
 import com.belac.ines.foodie.api.RetrofitClient;
 import com.belac.ines.foodie.helper.HomeAdapter;
+import com.belac.ines.foodie.profile.ProfileRestoranFragment;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -38,14 +51,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class HomeFragment extends Fragment implements HomeAdapter.HomeListener {
+public class HomeFragment extends Fragment implements OnMapReadyCallback, HomeAdapter.HomeListener {
 
     private GoogleMap googleMap;
     @BindView(R.id.recycler_view) RecyclerView recyclerView;
     @BindView(R.id.progress_bar)  ProgressBar mProgressBar;
     private SupportMapFragment mapFragment;
     private FusedLocationProviderClient mFusedLocationClient;
-    private final LatLng mDefaultLocation = new LatLng(51.509865, -0.118092);
 
     private static final String TAG = HomeFragment.class.getSimpleName();
 
@@ -63,12 +75,15 @@ public class HomeFragment extends Fragment implements HomeAdapter.HomeListener {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, view);
 
+
+        mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map_view);
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
-
-        getData("Porto");
+        mapFragment.getMapAsync(this);
+        getData("Pazin");
 
         return view;
     }
@@ -96,6 +111,20 @@ public class HomeFragment extends Fragment implements HomeAdapter.HomeListener {
     }
 
     private void showData(@NonNull Response<List<RestaurantResponse>> response) {
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+        for (RestaurantResponse restaurants : response.body()) {
+            LatLng loc = new LatLng(Double.parseDouble(restaurants.getLatitude()),
+                    Double.parseDouble(restaurants.getLongitude()));
+
+            googleMap.addMarker(new MarkerOptions().position(loc).title(restaurants.getName()));
+            builder.include(loc);
+        }
+
+        LatLngBounds bounds = builder.build();
+        int width = getResources().getDisplayMetrics().widthPixels;
+        CameraUpdate center = CameraUpdateFactory.newLatLngBounds(bounds, width,300,0);
+        googleMap.moveCamera(center);
 
         recyclerView.setAdapter(new HomeAdapter(response.body(), getContext(), this));
     }
@@ -119,11 +148,61 @@ public class HomeFragment extends Fragment implements HomeAdapter.HomeListener {
 
     @Override
     public void onClickLocation(LatLng latLng) {
-
+        CameraUpdate center = CameraUpdateFactory.newLatLng(latLng);
+        CameraUpdate zoom = CameraUpdateFactory.zoomTo(13);
+        googleMap.moveCamera(center);
+        googleMap.animateCamera(zoom);
     }
 
     @Override
     public void onClickItem(RestaurantResponse item) {
+        Fragment fragment = new ProfileRestoranFragment();
+        Bundle args = new Bundle();
+        args.putInt("id", Integer.valueOf(item.getId()));
+        fragment.setArguments(args);
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
+    }
 
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        this.googleMap = googleMap;
+        if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+
+            showLastLocation();
+        } else {
+            checkLocationPermission();
+            CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(0,0));
+            CameraUpdate zoom = CameraUpdateFactory.zoomTo(2);
+            googleMap.moveCamera(center);
+            googleMap.animateCamera(zoom);
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private void showLastLocation() {
+        googleMap.setMyLocationEnabled(true);
+
+        mFusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override public void onSuccess(Location location) {
+
+                if (location == null) {
+                    CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(0,0));
+                    CameraUpdate zoom = CameraUpdateFactory.zoomTo(2);
+                    googleMap.moveCamera(center);
+                    googleMap.animateCamera(zoom);
+
+                    return;
+                }
+                CameraUpdate center =
+                        CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
+                CameraUpdate zoom = CameraUpdateFactory.zoomTo(10);
+                googleMap.moveCamera(center);
+                googleMap.animateCamera(zoom);
+            }
+        });
     }
 }
