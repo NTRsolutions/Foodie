@@ -38,7 +38,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -63,7 +62,7 @@ public class ArchiveFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_restorant, container, false);
+        View view = inflater.inflate(R.layout.fragment_all_restaurants, container, false);
         //pripremanje adaptera i recyclerView za prikaz narudzbi
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         orderAdapter = new ArchiveAdapter(orderList);

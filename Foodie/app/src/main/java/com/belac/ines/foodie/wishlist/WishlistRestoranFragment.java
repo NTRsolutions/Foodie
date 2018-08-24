@@ -65,7 +65,7 @@ public class WishlistRestoranFragment extends Fragment implements WishlistTouchH
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_restorant, container, false);
+        View view = inflater.inflate(R.layout.fragment_all_restaurants, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         frameLayout = (FrameLayout) view.findViewById(R.id.frame_layout);
         wAdapter = new WishlistAdapter(restoranList, getContext());
