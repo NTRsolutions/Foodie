@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
+
 import com.belac.ines.foodie.R;
 import com.belac.ines.foodie.api.APIService;
 import com.belac.ines.foodie.api.Interactor;
@@ -26,7 +27,6 @@ import com.belac.ines.foodie.api.RetrofitClient;
 import com.belac.ines.foodie.helper.FavoritesManager;
 import com.belac.ines.foodie.helper.OrderInteractor;
 import com.belac.ines.foodie.helper.RestaurantMenusAdapter;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
