@@ -25,4 +25,16 @@ public interface APIService {
 
     @GET("/foodie/Menu.php") Call<MenuResponse> menu();
 
+    @POST("/foodie/RestaurantDetails.php") @FormUrlEncoded Call<RestaurantDetailsResponse> restaurantDetails(
+            @Field("restorantID") int restaurantId);
+
+    @POST("/foodie/RestoranMenus.php") @FormUrlEncoded Call<RestaurantMenusResponse> restaurantMenus(
+            @Field("restoranID") int id);
+
+    @POST("foodie/EditMenu.php") @FormUrlEncoded Call<ResponseBody> addMenu(@Field("restaurantID") int restaurantID,
+                                                                            @Field("firstMeal") String firstMeal, @Field("secondMeal") String secondMeal,
+                                                                            @Field("thirdMeal") String thirdMeal, @Field("price") int price);
+
+    @POST("foodie/EditMenu.php") @FormUrlEncoded Call<ResponseBody> deleteMenu(@Field("menuID") int menuID);
+
 }

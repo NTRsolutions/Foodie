@@ -1,0 +1,69 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:orientation="horizontal"
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp"
+    >
+
+    <ImageView
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:src="@drawable/ic_mood_black_120dp"
+        android:contentDescription="@null"
+        android:padding="8dp"
+        android:layout_gravity="center"
+        />
+
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center_vertical"
+        >
+
+        <TextView
+            tools:text="First Meal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/firstMeal"
+            android:textSize="12sp"
+            android:textColor="@color/colorAccent"
+            />
+
+        <TextView
+            android:id="@+id/secondMeal"
+            tools:text="Second Meal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@color/colorAccent"
+            />
+
+        <TextView
+            android:id="@+id/thirdMeal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@color/colorAccent"
+            tools:text="Third Meal"
+            />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/delete"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@drawable/ic_remove_circle_black_24dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="16dp"
+        />
+
+
+</LinearLayout>
