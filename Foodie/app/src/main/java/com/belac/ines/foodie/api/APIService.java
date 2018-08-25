@@ -37,4 +37,7 @@ public interface APIService {
 
     @POST("foodie/EditMenu.php") @FormUrlEncoded Call<ResponseBody> deleteMenu(@Field("menuID") int menuID);
 
+    @POST("/foodie/Order.php") @FormUrlEncoded Call<ResponseBody> order(@Field("userID") int userID,
+                                                                        @Field("menuID") int menuID);
+
 }

@@ -2,6 +2,7 @@ package com.belac.ines.foodie.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -18,10 +19,12 @@ import android.widget.TextView;
 
 import com.belac.ines.foodie.R;
 import com.belac.ines.foodie.api.APIService;
+import com.belac.ines.foodie.api.Interactor;
 import com.belac.ines.foodie.api.RestaurantDetailsResponse;
 import com.belac.ines.foodie.api.RestaurantMenusResponse;
 import com.belac.ines.foodie.api.RetrofitClient;
 import com.belac.ines.foodie.helper.FavoritesManager;
+import com.belac.ines.foodie.helper.OrderInteractor;
 import com.belac.ines.foodie.helper.RestaurantMenusAdapter;
 
 import butterknife.BindView;
@@ -136,7 +139,16 @@ public class MenuDetailFragment extends Fragment implements RestaurantMenusAdapt
     }
 
     @Override
-    public void onClickOrder(int id) {
+    public void onClickOrder(int menuId) {
 
+        OrderInteractor.orderMenu(getContext(), menuId, new Interactor() {
+            @Override public void onSuccess() {
+                Snackbar.make(root, "The order was sent.", Snackbar.LENGTH_SHORT).show();
+            }
+
+            @Override public void onError() {
+                Snackbar.make(root, "Something went wrong!", Snackbar.LENGTH_SHORT).show();
+            }
+        });
     }
 }
