@@ -98,7 +98,7 @@ public class AllRestaurantsFragment extends Fragment implements AllRestaurantsAd
 
     @Override
     public void onClickRestaurant(AllRestaurantsResponse.Result item) {
-        Fragment fragment = new ProfileRestoranFragment();
+        Fragment fragment = new MenuDetailFragment();
         Bundle args = new Bundle();
         args.putInt("id", Integer.valueOf(item.getId()));
         fragment.setArguments(args);
