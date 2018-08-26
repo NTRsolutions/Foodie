@@ -62,7 +62,7 @@ import retrofit2.Response;
 
 public class ProfileRestoranFragment extends Fragment implements ProfileRestoranAdapter.ProfileRestaurantAdapterListener {
 
-    private static final String TAG = ProfileFragment.class.getSimpleName();
+    private static final String TAG = ProfilKorisnikFragment.class.getSimpleName();
 
     @BindView(R.id.name) TextView name;
     @BindView(R.id.telephone) TextView telephone;

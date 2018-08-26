@@ -6,8 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.belac.ines.foodie.R;
+
 import com.belac.ines.foodie.helper.SessionManager;
 
 import butterknife.BindView;

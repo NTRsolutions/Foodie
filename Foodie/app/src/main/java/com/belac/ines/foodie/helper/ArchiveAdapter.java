@@ -74,7 +74,7 @@ public class ArchiveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
                          vhRestaurant.date.setText(setDate(order.getDate()));
 
-                         vhRestaurant.name.setText(String.format("%s %s", order.getName(), order.getSurname()));
+                         vhRestaurant.name.setText(String.format("Date: %s", order.getName(), order.getSurname()));
 
                          vhRestaurant.price.setText(String.format("Price: %s$", order.getPrice()));
                          vhRestaurant.delivery.setText(String.format("Address: %s", order.getDelivery()));

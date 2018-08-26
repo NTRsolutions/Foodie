@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity
 
         Fragment fragment = null;
         if (id == R.id.nav_profile) {
-            fragment = new ProfilKorisnikFragment();
+            fragment = profile;
         } else if (id == R.id.nav_menu) {
             fragment = new MenuFragment();
         } else if (id == R.id.nav_wishlist) {
