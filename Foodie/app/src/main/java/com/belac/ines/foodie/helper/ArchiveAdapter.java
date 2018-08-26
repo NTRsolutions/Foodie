@@ -1,122 +1,153 @@
 package com.belac.ines.foodie.helper;
 
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
-import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.belac.ines.foodie.MainActivity;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.belac.ines.foodie.R;
-import com.belac.ines.foodie.classes.Order;
-import com.belac.ines.foodie.classes.Restoran;
-
-import java.sql.Date;
-import java.util.ArrayList;
+import com.belac.ines.foodie.api.OrderResult;
+import com.belac.ines.foodie.helper.SessionManager;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
-
 /**
  * Created by Korisnik on 21.01.2018..
  */
 
-public class ArchiveAdapter extends RecyclerView.Adapter<ArchiveAdapter.MyViewHolder>
-        implements Filterable {
+public class ArchiveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+         {
+             private static final int USER = 0;
+             private static final int RESTAURANT = 1;
 
-    private List<Order> ordersList;
-    private List<Order> filteredList;
+             private List<OrderResult> items;
+             private Context context;
 
-    //prima dohvaćenu listu narudzbi iz DB
-    public ArchiveAdapter(List<Order> ordersList) {
-        this.ordersList = ordersList;
-        this.filteredList = ordersList;
-    }
+             public ArchiveAdapter(List<OrderResult> results, Context context) {
+                 this.items = results;
+                 this.context = context;
+             }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+             @NonNull @Override public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        public TextView userName, restoranName, orderDate, orderPrice;
+                 switch (viewType) {
+                     case USER:
+                         return new ArchiveAdapter.ViewHolderUser(LayoutInflater.from(parent.getContext())
+                                 .inflate(R.layout.list_row_archive_user, parent, false));
+                     case RESTAURANT:
+                         return new ArchiveAdapter.ViewHolderRestaurant(LayoutInflater.from(parent.getContext())
+                                 .inflate(R.layout.list_row_archive_restaurant, parent, false));
+                 }
 
-        public MyViewHolder(View itemView) {
-            super(itemView);
-            userName = (TextView) itemView.findViewById(R.id.userName);
-            restoranName = (TextView) itemView.findViewById(R.id.restoranName);
-            orderDate = (TextView) itemView.findViewById(R.id.orderDate);
-            orderPrice = (TextView) itemView.findViewById(R.id.orderPrice);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showPopup(v);
+                 throw new IllegalArgumentException("Illegal state!");
+             }
 
-                }
-            });
-        }
-    }
-    @Override
-    public ArchiveAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_row_archive, parent, false);
-        return new ArchiveAdapter.MyViewHolder(itemView);
-    }
+             @Override public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+                 switch (holder.getItemViewType()) {
+                     case USER:
+                         ViewHolderUser vhUser = (ViewHolderUser) holder;
 
-    //punjenje view holdera ("kartica")
-    @Override
-    public void onBindViewHolder(ArchiveAdapter.MyViewHolder holder, int position) {
-        Order order = filteredList.get(position);
-        holder.userName.setText(order.getUserName());
-        holder.restoranName.setText(order.getRestoranName());
-        holder.orderDate.setText("Date of order: " + order.getDatum());
-        holder.orderPrice.setText("Price of order: " + order.getPrice());
-    }
+                         OrderResult usrOrder = items.get(position);
 
-        @Override
-        public int getItemCount() { return filteredList.size(); }
+                         vhUser.restaurant.setText(usrOrder.getRestoran());
 
-        //search filtriranje
-        @Override
-        public Filter getFilter() {
-            return new Filter() {
-                @Override
-                protected FilterResults performFiltering(CharSequence charSequence) {
-                    String charString = charSequence.toString();
-                    if(charString.isEmpty()){
-                        filteredList = ordersList;
-                    }else {
-                        List<Order> filter = new ArrayList<>();
-                        for (Order row : ordersList){
-                            if(row.getUserName().toLowerCase().contains(charString.toLowerCase())
-                                    || row.getRestoranName().toLowerCase().contains(charString.toLowerCase())
-                                    || row.getDatum().toLowerCase().contains(charString.toLowerCase())){
-                                filter.add(row);
-                            }
-                        }
-                        filteredList = filter;
-                    }
+                         vhUser.date.setText(setDate(usrOrder.getDate()));
 
-                    FilterResults filterResults = new FilterResults();
-                    filterResults.values = filteredList;
-                    return filterResults;
-                }
+                         vhUser.price.setText(String.format("Price: %s$", usrOrder.getPrice()));
+                         vhUser.delivery.setText(String.format("Address: %s", usrOrder.getDelivery()));
 
-                @Override
-                protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                    filteredList = (ArrayList<Order>) filterResults.values;
-                    notifyDataSetChanged();
-                }
-            };
-        }
+                         vhUser.firstMeal.setText(String.format("Appetizer: %s", usrOrder.getFirstMeal()));
+                         vhUser.secondMeal.setText(String.format("Main course: %s", usrOrder.getSecondMeal()));
+                         vhUser.thirdMeal.setText(String.format("Dessert: %s", usrOrder.getThirdMeal()));
 
-    public void showPopup(View anchorView) {
+                         break;
 
+                     case RESTAURANT:
+                         ViewHolderRestaurant vhRestaurant = (ViewHolderRestaurant) holder;
 
+                         OrderResult order = items.get(position);
 
-    }
+                         vhRestaurant.date.setText(setDate(order.getDate()));
+
+                         vhRestaurant.name.setText(String.format("%s %s", order.getName(), order.getSurname()));
+
+                         vhRestaurant.price.setText(String.format("Price: %s$", order.getPrice()));
+                         vhRestaurant.delivery.setText(String.format("Address: %s", order.getDelivery()));
+
+                         vhRestaurant.firstMeal.setText(String.format("Appetizer: %s", order.getFirstMeal()));
+                         vhRestaurant.secondMeal.setText(String.format("Main course: %s", order.getSecondMeal()));
+                         vhRestaurant.thirdMeal.setText(String.format("Dessert: %s", order.getThirdMeal()));
+                         break;
+                 }
+             }
+
+             @Override public int getItemViewType(int position) {
+                 int type = SessionManager.getType(context);
+
+                 if (type == 1) {
+                     return USER;
+                 } else if (type == 2) {
+                     return RESTAURANT;
+                 } else {
+                     throw new IllegalArgumentException("Illegal state!");
+                 }
+             }
+
+             private String setDate(String orderTime) {
+                 try {
+                     SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                     java.util.Date date = parser.parse(orderTime);
+                     SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.YYYY HH:mm");
+                     String formattedDate = formatter.format(date);
+                     return String.format("Date: %s", formattedDate);
+                 } catch (ParseException e) {
+                     e.printStackTrace();
+                     return String.format("Date: %s", orderTime);
+                 }
+             }
+
+             @Override public int getItemCount() {
+                 return items.size();
+             }
+
+             public class ViewHolderUser extends RecyclerView.ViewHolder {
+
+                 @BindView(R.id.firstMeal) public TextView firstMeal;
+                 @BindView(R.id.secondMeal) public TextView secondMeal;
+                 @BindView(R.id.thirdMeal) public TextView thirdMeal;
+
+                 @BindView(R.id.restaurant) public TextView restaurant;
+                 @BindView(R.id.price) public TextView price;
+                 @BindView(R.id.date) public TextView date;
+                 @BindView(R.id.delivery) public TextView delivery;
+
+                 public ViewHolderUser(View itemView) {
+                     super(itemView);
+
+                     ButterKnife.bind(this, itemView);
+                 }
+             }
+
+             public class ViewHolderRestaurant extends RecyclerView.ViewHolder {
+
+                 @BindView(R.id.firstMeal) public TextView firstMeal;
+                 @BindView(R.id.secondMeal) public TextView secondMeal;
+                 @BindView(R.id.thirdMeal) public TextView thirdMeal;
+
+                 @BindView(R.id.name) public TextView name;
+                 @BindView(R.id.price) public TextView price;
+                 @BindView(R.id.date) public TextView date;
+                 @BindView(R.id.delivery) public TextView delivery;
+
+                 public ViewHolderRestaurant(View itemView) {
+                     super(itemView);
+
+                     ButterKnife.bind(this, itemView);
+                 }
+             }
 }

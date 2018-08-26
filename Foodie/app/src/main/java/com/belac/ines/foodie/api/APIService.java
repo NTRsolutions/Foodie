@@ -40,4 +40,10 @@ public interface APIService {
     @POST("/foodie/Order.php") @FormUrlEncoded Call<ResponseBody> order(@Field("userID") int userID,
                                                                         @Field("menuID") int menuID);
 
+    @POST("foodie/UserOrders.php") @FormUrlEncoded Call<OrderResponse> getOrders(@Field("userID") int userID);
+
+    @POST("foodie/RestaurantOrders.php") @FormUrlEncoded Call<OrderResponse> getRestaurantOrders(
+            @Field("restaurantID") int restaurantID);
+
+
 }

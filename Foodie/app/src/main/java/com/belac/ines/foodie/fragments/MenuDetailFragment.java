@@ -140,7 +140,6 @@ public class MenuDetailFragment extends Fragment implements RestaurantMenusAdapt
 
     @Override
     public void onClickOrder(int menuId) {
-
         OrderInteractor.orderMenu(getContext(), menuId, new Interactor() {
             @Override public void onSuccess() {
                 Snackbar.make(root, "The order was sent.", Snackbar.LENGTH_SHORT).show();
