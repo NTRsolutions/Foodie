@@ -159,7 +159,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, HomeAd
 
     @Override
     public void onClickItem(RestaurantResponse item) {
-        Fragment fragment = new ProfileRestoranFragment();
+        Fragment fragment = new MenuDetailFragment();
         Bundle args = new Bundle();
         args.putInt("id", Integer.valueOf(item.getId()));
         fragment.setArguments(args);

@@ -20,7 +20,7 @@ public class ProfileFragment extends Fragment {
 
     private static final String TAG = ProfileFragment.class.getSimpleName();
 
-    @BindView(R.id.user) TextView name;
+    @BindView(R.id.name) TextView name;
     @BindView(R.id.address) TextView address;
     @BindView(R.id.email) TextView email;
     @BindView(R.id.telephone) TextView telephone;

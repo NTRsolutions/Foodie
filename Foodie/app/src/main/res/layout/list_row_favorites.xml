@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:background="@android:color/white"
+        >
+
+    <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:id="@+id/restoranImage"
+            android:src="@drawable/ic_mood_black_120dp"
+            android:contentDescription="@null"
+            android:layout_gravity="center_vertical"
+            />
+
+    <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="16dp"
+            >
+        <TextView
+                tools:text="Black Mamba"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/restoranName"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"
+                />
+
+        <TextView
+                tools:text="Black Porto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/restoranAddress"
+                android:textSize="12sp"
+                android:textColor="@color/colorAccent"
+                />
+    </LinearLayout>
+
+
+    <ImageView
+            android:id="@+id/remove"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_remove_circle_black_24dp"
+            android:contentDescription="@null"
+            />
+
+</LinearLayout>

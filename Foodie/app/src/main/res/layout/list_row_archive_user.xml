@@ -1,0 +1,87 @@
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp"
+        >
+
+
+    <TextView
+            android:id="@+id/restaurant"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-medium"
+            android:maxLines="1"
+            android:textColor="@android:color/black"
+            android:textSize="22sp"
+            tools:text="Ime restorana"
+            />
+
+    <TextView
+            android:id="@+id/date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/colorAccent"
+            android:textSize="12sp"
+            tools:text="Date:"
+            />
+
+    <TextView
+            android:id="@+id/delivery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/colorAccent"
+            android:textSize="12sp"
+            tools:text="Adresa"
+            />
+
+    <TextView
+            android:id="@+id/price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/colorAccent"
+            android:textSize="12sp"
+            tools:text="Cijena narudzbe"
+            />
+
+
+
+    <TextView
+            tools:text="First Meal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/firstMeal"
+            android:textSize="12sp"
+            android:textColor="@android:color/black"
+            android:layout_marginTop="4dp"
+            />
+
+    <TextView
+            android:id="@+id/secondMeal"
+            tools:text="Second Meal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@android:color/black"
+            android:layout_marginTop="4dp"
+            />
+
+    <TextView
+            android:id="@+id/thirdMeal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@android:color/black"
+            tools:text="Third Meal"
+            android:layout_marginTop="4dp"
+
+            />
+
+
+</LinearLayout>

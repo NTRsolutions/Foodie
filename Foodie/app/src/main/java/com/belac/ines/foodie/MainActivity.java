@@ -17,6 +17,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.belac.ines.foodie.fragments.ArchiveFragment;
+import com.belac.ines.foodie.fragments.FavoritesFragment;
 import com.belac.ines.foodie.fragments.HomeFragment;
 import com.belac.ines.foodie.fragments.MenuFragment;
 import com.belac.ines.foodie.fragments.AllRestaurantsFragment;
@@ -106,7 +107,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_menu) {
             fragment = new MenuFragment();
         } else if (id == R.id.nav_wishlist) {
-            fragment = new HomeFragment();
+            fragment = new FavoritesFragment();
         } else if (id == R.id.nav_restoran) {
             fragment = new AllRestaurantsFragment();
         } else if (id == R.id.nav_home) {
