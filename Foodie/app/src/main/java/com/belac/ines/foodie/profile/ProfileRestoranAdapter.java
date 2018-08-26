@@ -44,7 +44,7 @@ public class ProfileRestoranAdapter extends RecyclerView.Adapter<ProfileRestoran
         holder.secondMeal.setText(String.format("Main course: %s", item.getSecondMeal()));
         holder.thirdMeal.setText(String.format("Dessert: %s", item.getThirdMeal()));
 
-        holder.delete_icon.setOnClickListener(new View.OnClickListener() {
+        holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {listener.onClickDelete(item);
             }
@@ -71,7 +71,7 @@ public class ProfileRestoranAdapter extends RecyclerView.Adapter<ProfileRestoran
         @BindView(R.id.firstMeal) public TextView firstMeal;
         @BindView(R.id.secondMeal)public TextView secondMeal;
         @BindView(R.id.thirdMeal) public TextView thirdMeal;
-        @BindView(R.id.delete_icon)public ImageView delete_icon;
+        @BindView(R.id.delete)public ImageView delete;
 
         public ViewHolder(View itemView) {
             super(itemView);
