@@ -21,9 +21,9 @@ public class ProfileRestoranAdapter extends RecyclerView.Adapter<ProfileRestoran
 
     private List<RestaurantMenusResponse.Result> items;
     private Context context;
-    private RestaurantProfileAdapterListener listener;
+    private ProfileRestaurantAdapterListener listener;
 
-    public ProfileRestoranAdapter(List<RestaurantMenusResponse.Result> items, Context context, RestaurantProfileAdapterListener listener) {
+    public ProfileRestoranAdapter(List<RestaurantMenusResponse.Result> items, Context context, ProfileRestaurantAdapterListener listener) {
         this.items = items;
         this.context = context;
         this.listener = listener;
@@ -61,21 +61,17 @@ public class ProfileRestoranAdapter extends RecyclerView.Adapter<ProfileRestoran
         notifyDataSetChanged();
     }
 
-    public interface RestaurantProfileAdapterListener {
+    public interface ProfileRestaurantAdapterListener {
 
         void onClickDelete(RestaurantMenusResponse.Result item);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.firstMeal)
-        public TextView firstMeal;
-        @BindView(R.id.secondMeal)
-        public TextView secondMeal;
-        @BindView(R.id.thirdMeal)
-        public TextView thirdMeal;
-        @BindView(R.id.delete_icon)
-        public ImageView delete_icon;
+        @BindView(R.id.firstMeal) public TextView firstMeal;
+        @BindView(R.id.secondMeal)public TextView secondMeal;
+        @BindView(R.id.thirdMeal) public TextView thirdMeal;
+        @BindView(R.id.delete_icon)public ImageView delete_icon;
 
         public ViewHolder(View itemView) {
             super(itemView);

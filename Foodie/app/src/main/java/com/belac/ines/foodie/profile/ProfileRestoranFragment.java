@@ -60,9 +60,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ProfileRestoranFragment extends Fragment implements ProfileRestoranAdapter.RestaurantProfileAdapterListener {
+public class ProfileRestoranFragment extends Fragment implements ProfileRestoranAdapter.ProfileRestaurantAdapterListener {
 
-    private static final String TAG = ProfileFragment.class.getSimpleName();
+    private static final String TAG = ProfilKorisnikFragment.class.getSimpleName();
 
     @BindView(R.id.name) TextView name;
     @BindView(R.id.telephone) TextView telephone;
@@ -119,6 +119,7 @@ public class ProfileRestoranFragment extends Fragment implements ProfileRestoran
 
                     @Override
                     public void onFailure(@NonNull Call<RestaurantMenusResponse> call, @NonNull Throwable t) {
+                        progressBar.setVisibility(View.GONE);
 
                     }
                 });
