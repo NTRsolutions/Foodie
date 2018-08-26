@@ -2,6 +2,7 @@ package com.belac.ines.foodie.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -17,9 +18,11 @@ import android.widget.Toast;
 
 import com.belac.ines.foodie.R;
 import com.belac.ines.foodie.api.APIService;
+import com.belac.ines.foodie.api.Interactor;
 import com.belac.ines.foodie.api.MenuResponse;
 import com.belac.ines.foodie.api.RetrofitClient;
 import com.belac.ines.foodie.helper.MenuAdapter;
+import com.belac.ines.foodie.helper.OrderInteractor;
 import com.belac.ines.foodie.profile.ProfileRestoranFragment;
 
 import java.util.ArrayList;
@@ -34,15 +37,18 @@ import retrofit2.Response;
 
 public class MenuFragment extends Fragment implements MenuAdapter.MenuListener {
 
-    @BindView(R.id.recycler_view) RecyclerView recyclerView;
-    @BindView(R.id.progress_bar)  ProgressBar progressBar;
+    @BindView(R.id.recycler_view)
+    RecyclerView recyclerView;
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
     @BindView(R.id.root)
     LinearLayout root;
 
     private List<MenuResponse.Result> menuList = new ArrayList<>();
     private MenuAdapter menuAdapter;
 
-    public MenuFragment() {}
+    public MenuFragment() {
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,7 +88,8 @@ public class MenuFragment extends Fragment implements MenuAdapter.MenuListener {
                 }
             }
 
-            @Override public void onFailure(@NonNull Call<MenuResponse> call, @NonNull Throwable t) {
+            @Override
+            public void onFailure(@NonNull Call<MenuResponse> call, @NonNull Throwable t) {
                 progressBar.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
                 Toast.makeText(getContext(), "Something went wrong!", Toast.LENGTH_SHORT).show();
@@ -92,7 +99,8 @@ public class MenuFragment extends Fragment implements MenuAdapter.MenuListener {
         return view;
     }
 
-    @OnTextChanged(R.id.search) void onTextChange(CharSequence query) {
+    @OnTextChanged(R.id.search)
+    void onTextChange(CharSequence query) {
         menuAdapter.getFilter().filter(query);
     }
 
@@ -106,4 +114,19 @@ public class MenuFragment extends Fragment implements MenuAdapter.MenuListener {
         fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
     }
 
+    @Override
+    public void onClickOrder(int menuId) {
+        OrderInteractor.orderMenu(getContext(), menuId, new Interactor() {
+            @Override
+            public void onSuccess() {
+                Snackbar.make(root, "The order was sent.", Snackbar.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError() {
+                Snackbar.make(root, "Something went wrong!", Snackbar.LENGTH_SHORT).show();
+            }
+
+        });
+    }
 }

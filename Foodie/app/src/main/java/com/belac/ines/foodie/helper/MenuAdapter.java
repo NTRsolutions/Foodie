@@ -60,6 +60,20 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder>
         holder.firstMeal.setText("Appetizer: " + restoran.getFirst());
         holder.secondMeal.setText("Main course: " + restoran.getSecond());
         holder.thirdMeal.setText("Dessert: " + restoran.getThird());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onClickMenu(restoran);
+            }
+        });
+
+        holder.order.setOnClickListener(new View.OnClickListener() {
+                                            @Override public void onClick(View v) {
+            listener.onClickOrder(Integer.valueOf(restoran.getId()));
+                                            }
+                                        }
+        );
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
@@ -68,6 +82,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder>
         @BindView(R.id.firstMeal) public TextView firstMeal;
         @BindView(R.id.secondMeal) public TextView secondMeal;
         @BindView(R.id.thirdMeal) public TextView thirdMeal;
+        @BindView(R.id.order) public Button order;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -116,6 +131,8 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder>
     public interface MenuListener {
 
         void onClickMenu(MenuResponse.Result item);
+
+        void onClickOrder(int menuId);
 
     }
 }
