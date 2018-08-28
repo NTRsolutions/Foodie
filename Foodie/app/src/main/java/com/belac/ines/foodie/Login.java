@@ -52,7 +52,14 @@ public class Login extends AppCompatActivity {
         final String email = etEmail.getText().toString().trim();
         final String password = etPassword.getText().toString().trim();
 
-        if(!email.isEmpty() && !password.isEmpty() ) {
+        int check = checkCredentials(email, password);
+        if(check == 3){
+            Toast.makeText(Login.this, "Please enter your email.", Toast.LENGTH_SHORT).show();
+        }else if (check == 2){
+            Toast.makeText(Login.this, "Please enter your password.", Toast.LENGTH_SHORT).show();
+        }else if(check == 1){
+            Toast.makeText(Login.this, "Please enter your credentials.", Toast.LENGTH_SHORT).show();
+        }else if (check == 0){
             showProgressDialog();
 
             RetrofitClient.instance()
@@ -98,6 +105,18 @@ public class Login extends AppCompatActivity {
         } else {
             Toast.makeText(Login.this, "OOPs! Please enter your email and password.", Toast.LENGTH_SHORT)
                     .show();
+        }
+    }
+
+    public int checkCredentials(String email, String password) {
+        if(email.isEmpty() && password.isEmpty()){
+            return 1;
+        }else if(password.isEmpty()){
+            return 2;
+        }else if (email.isEmpty()){
+            return 3;
+        }else{
+            return 0;
         }
     }
 
