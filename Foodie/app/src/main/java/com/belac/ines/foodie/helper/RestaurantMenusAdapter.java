@@ -22,6 +22,7 @@ public class RestaurantMenusAdapter extends RecyclerView.Adapter<RestaurantMenus
 	private List<RestaurantMenusResponse.Result> items;
 	private Context context;
 	private RestaurantMenusAdapterListener listener;
+	private boolean user = true;
 
 	public RestaurantMenusAdapter(List<RestaurantMenusResponse.Result> items, Context context,
                                   RestaurantMenusAdapterListener listener) {
@@ -33,6 +34,9 @@ public class RestaurantMenusAdapter extends RecyclerView.Adapter<RestaurantMenus
 	@Override public RestaurantMenusAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 		View itemView =
 				LayoutInflater.from(parent.getContext()).inflate(R.layout.restaurant_menu_details_item, parent, false);
+		if (SessionManager.getType(parent.getContext()) == 2) {
+			user = false;
+		}
 		return new RestaurantMenusAdapter.ViewHolder(itemView);
 	}
 
@@ -42,6 +46,10 @@ public class RestaurantMenusAdapter extends RecyclerView.Adapter<RestaurantMenus
 		holder.firstMeal.setText(String.format("Appetizer: %s", item.getFirstMeal()));
 		holder.secondMeal.setText(String.format("Main course: %s", item.getSecondMeal()));
 		holder.thirdMeal.setText(String.format("Dessert: %s", item.getThirdMeal()));
+
+		if(!user){
+			holder.order.setVisibility(View.GONE);
+		}
 
 		holder.order.setOnClickListener(new View.OnClickListener() {
 			@Override public void onClick(View v) {

@@ -56,7 +56,7 @@ public class ArchiveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
                          vhUser.restaurant.setText(usrOrder.getRestoran());
 
-                         vhUser.date.setText(setDate(usrOrder.getDate()));
+                         vhUser.date.setText(String.format("Date: %s", usrOrder.getDate()));
 
                          vhUser.price.setText(String.format("Price: %s$", usrOrder.getPrice()));
                          vhUser.delivery.setText(String.format("Address: %s", usrOrder.getDelivery()));
@@ -72,9 +72,9 @@ public class ArchiveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
                          OrderResult order = items.get(position);
 
-                         vhRestaurant.date.setText(setDate(order.getDate()));
+                         vhRestaurant.date.setText(String.format("Date: %s", order.getDate()));
 
-                         vhRestaurant.name.setText(String.format("Date: %s", order.getName(), order.getSurname()));
+                         vhRestaurant.name.setText(String.format("Name: %s", order.getName(), order.getSurname()));
 
                          vhRestaurant.price.setText(String.format("Price: %s$", order.getPrice()));
                          vhRestaurant.delivery.setText(String.format("Address: %s", order.getDelivery()));

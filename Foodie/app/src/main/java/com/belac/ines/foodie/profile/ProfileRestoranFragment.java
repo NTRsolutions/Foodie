@@ -67,12 +67,9 @@ public class ProfileRestoranFragment extends Fragment implements ProfileRestoran
     @BindView(R.id.name) TextView name;
     @BindView(R.id.telephone) TextView telephone;
     @BindView(R.id.location) TextView location;
-    @BindView(R.id.recycler_view)
-    RecyclerView recyclerView;
-    @BindView(R.id.progress_bar)
-    ProgressBar progressBar;
-    @BindView(R.id.root)
-    RelativeLayout root;
+    @BindView(R.id.recycler_view) RecyclerView recyclerView;
+    @BindView(R.id.progress_bar) ProgressBar progressBar;
+    @BindView(R.id.root) RelativeLayout root;
 
     public ProfileRestoranFragment() {
     }
