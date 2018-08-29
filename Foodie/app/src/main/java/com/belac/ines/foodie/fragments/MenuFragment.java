@@ -46,6 +46,7 @@ public class MenuFragment extends Fragment implements MenuAdapter.MenuListener {
 
     private List<MenuResponse.Result> menuList = new ArrayList<>();
     private MenuAdapter menuAdapter;
+    private static int id=0101;
 
     public MenuFragment() {
     }

@@ -1,9 +1,13 @@
 package com.belac.ines.foodie.fragments;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -33,11 +37,13 @@ import butterknife.OnCheckedChanged;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import static android.content.Context.NOTIFICATION_SERVICE;
+
 
 public class MenuDetailFragment extends Fragment implements RestaurantMenusAdapter.RestaurantMenusAdapterListener {
 
     private static final String TAG = MenuDetailFragment.class.getSimpleName();
-
+    private static int id=0101;
     @BindView(R.id.name) TextView name;
     @BindView(R.id.telephone) TextView telephone;
     @BindView(R.id.location) TextView location;
@@ -139,14 +145,31 @@ public class MenuDetailFragment extends Fragment implements RestaurantMenusAdapt
     }
 
     @Override
-    public void onClickOrder(int menuId) {
+    public void onClickOrder(final int menuId) {
+
         OrderInteractor.orderMenu(getContext(), menuId, new Interactor() {
             @Override public void onSuccess() {
-                Snackbar.make(root, "The order was sent.", Snackbar.LENGTH_SHORT).show();
+                NotificationCompat.Builder mBuilder =
+                        new NotificationCompat.Builder(getContext())
+                                .setSmallIcon(R.drawable.circle)
+                                .setContentTitle("New order from ")
+                                .setContentText("Order!")
+                                .setAutoCancel(true);
+
+                NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(NOTIFICATION_SERVICE);
+                notificationManager.notify(id++, mBuilder.build());
             }
 
             @Override public void onError() {
-                Snackbar.make(root, "Something went wrong!", Snackbar.LENGTH_SHORT).show();
+                NotificationCompat.Builder mBuilder =
+                        new NotificationCompat.Builder(getContext())
+                                .setSmallIcon(R.drawable.circle)
+                                .setContentTitle("Order not send ")
+                                .setContentText("Order!")
+                                .setAutoCancel(true);
+
+                NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(NOTIFICATION_SERVICE);
+                notificationManager.notify(id++, mBuilder.build());
             }
         });
     }
